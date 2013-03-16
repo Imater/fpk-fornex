@@ -1,0 +1,45 @@
+@CHARSET "UTF-8";
+
+#content {
+	font-family: Verdana, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+.itemNum {
+	float: left;
+	width: 50px;
+}
+
+.itemValue {
+	float: left;
+	margin: 0px 0px 0px 0px;
+}
+
+.deleteLink {
+	margin: 0.1em 0px 0.1em 0px;
+}
+
+.deleteLink img {
+	border: none;
+	padding: 0.2em 0px 0px 10px;
+}
+
+#list {
+	list-style: none;
+}
+
+#list li {
+	clear: both;
+	margin: 0;
+	border-top: solid 1px #fff;
+	border-bottom: solid 1px #d5dded;
+}
+
+#listForm {
+	float: left;
+}
+
+#add_item_form {
+	clear: both;
+}

@@ -1,0 +1,770 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Phing API Documentation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" href="css/jquery-ui.css" type="text/css"></link><link rel="stylesheet" href="css/docblox/jquery-ui-1.8.16.custom.css" type="text/css"></link><link rel="stylesheet" href="css/jquery.treeview.css" type="text/css"></link><link rel="stylesheet" href="css/theme.css" type="text/css"></link><script type="text/javascript" src="js/jquery-1.4.2.min.js"></script><script type="text/javascript" src="js/jquery-ui-1.8.2.custom.min.js"></script><script type="text/javascript" src="js/jquery.tools.min.js"></script><script type="text/javascript" src="js/jquery.cookie.js"></script><script type="text/javascript" src="js/jquery.treeview.js"></script><script type="text/javascript">
+            $(document).ready(function() {
+                $(".filetree").treeview({
+                    collapsed: true,
+                    persist: "cookie"
+                });
+
+                $("#accordion").accordion({
+                    collapsible: true,
+                    autoHeight:  false,
+                    fillSpace:   true
+                });
+
+                $(".tabs").tabs();
+            });
+        </script></head><body><div xmlns="" id="content">
+<script xmlns:dbx="http://docblox-project.org/xsl/functions">
+
+      function filterElements()
+      {
+        inherited = !$('#show-inherited').hasClass('deselected');
+        public    = !$('#show-public').hasClass('deselected');
+        protected = !$('#show-protected').hasClass('deselected');
+        private   = !$('#show-private').hasClass('deselected');
+
+        $('div.public').each(function(index, val) {
+            $(val).toggle(public && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.protected').each(function(index, val) {
+            $(val).toggle(protected && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.private').each(function(index, val) {
+            $(val).toggle(private && !($(val).hasClass('inherited_from') && !inherited));
+        });
+      }
+
+      $(document).ready(function() {
+        $('a.gripper').click(function() {
+            $(this).nextAll('div.code-tabs').slideToggle();
+            $(this).children('img').toggle();
+            return false;
+        });
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').css('cursor', 'pointer');
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').click(function() {
+            $(this).parent().nextAll('div.code-tabs').slideToggle();
+            $(this).parent().prevAll('a.gripper').children('img').toggle();
+            return false;
+        });
+
+        $('div.code-tabs').hide();
+        $('a.gripper').show();
+        $('div.code-tabs:empty').prevAll('a.gripper').html('');
+
+        $('#show-public, #show-protected, #show-private, #show-inherited')
+            .css('cursor', 'pointer')
+            .click(function(){
+                $(this).toggleClass('deselected');
+                if ($(this).hasClass('deselected')) {
+                  $(this).fadeTo('fast', '0.4');
+                } else {
+                  $(this).fadeTo('fast', '1.0');
+                }
+                filterElements();
+                return false;
+            });
+        $('#show-protected, #show-private').click();
+
+        // add the sliding behaviour to the file navigation and show it
+        // it is initially hidden for non-JS users.
+        $("#file-nav-box").show().hover(function() {
+            $("#file-nav-container").slideDown(400);
+        }, function() {
+            $("#file-nav-container").slideUp(400);
+        });
+      });
+
+      
+    </script><h1 xmlns:dbx="http://docblox-project.org/xsl/functions" class="file">contrib/DocBlox/Parallel/Manager.php</h1>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" id="file-nav-box">
+<div id="file-nav-options">
+              Show:
+              <img src="images/icons/visibility_public.png" id="show-public"><img src="images/icons/visibility_protected.png" id="show-protected"><img src="images/icons/visibility_private.png" id="show-private"><span class="attribute" id="show-inherited">inherited</span>
+</div>
+<div id="file-nav-container">
+<ul id="file-nav"><li>
+<a href="#classes"><img src="images/icons/class.png" height="14">
+                          Classes
+                      </a><ul><li><a href="#%5CDocBlox_Parallel_Manager">\DocBlox_Parallel_Manager</a></li></ul>
+</li></ul>
+<div style="clear: left;"></div>
+</div>
+<div id="file-nav-tab">
+              Table of Contents
+          </div>
+</div>
+<a xmlns:dbx="http://docblox-project.org/xsl/functions" name="top" class="anchor"></a><div id="file-description">
+<p xmlns:dbx="http://docblox-project.org/xsl/functions" class="short-description">DocBlox</p>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="long-description"><p>PHP Version 5</p></div>
+</div>
+<dl class="file-info">
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Author</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="mailto:mike.vanriel@naenius.com">Mike van Riel</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Category</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">DocBlox
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Copyright</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">2010-2011 Mike van Riel / Naenius (http://www.naenius.com)
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">License</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Link</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="http://docblox-project.org">http://docblox-project.org</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Package</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">Parallel
+         
+    </dd>
+</dl>
+<a name="classes" class="anchor"></a><a xmlns:dbx="http://docblox-project.org/xsl/functions" id="\DocBlox_Parallel_Manager" class="anchor"></a><h2 xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">\DocBlox_Parallel_Manager<div class="to-top"><a href="#top">jump to top</a></div>
+</h2>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">
+<small class="package"><b>Package: </b>Parallel</small><p class="short-description">Manager class for Parallel processes.</p>
+<div class="long-description"><p>This class will manage the workers and make sure all processes are executed
+in parallel and not too many at the same time.</p></div>
+<dl class="class-info">
+<dt>Parent(s)</dt>
+<dd><a href="http://php.net/manual/en/class.arrayobject.php">\ArrayObject</a></dd>
+<dt>Author</dt>
+<dd>
+<a href="mailto:mike.vanriel@naenius.com">Mike van Riel</a>
+         
+    </dd>
+<dt>Category</dt>
+<dd>DocBlox
+         
+    </dd>
+<dt>License</dt>
+<dd>
+<a href="http://www.opensource.org/licenses/mit-license.php">MIT</a>
+         
+    </dd>
+<dt>Link</dt>
+<dd>
+<a href="http://docblox-project.org">http://docblox-project.org</a>
+         
+    </dd>
+</dl>
+<h3>Properties</h3>
+<div>
+<a id="\DocBlox_Parallel_Manager::$is_running" class="anchor"></a><div class="property protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">boolean
+                 <span class="highlight">$is_running</span>= 'false'
+                </code><div class="description">
+<p class="short-description"></p>Tracks whether this manager is currently executing</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>false</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>boolean</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::$process_limit" class="anchor"></a><div class="property protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">int
+                 <span class="highlight">$process_limit</span>= '2'
+                </code><div class="description">
+<p class="short-description"></p>The maximum number of processes to run simultaneously</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>2</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>int</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+<h3>Methods</h3>
+<div>
+<a id="\DocBlox_Parallel_Manager::__construct()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">__construct</span><span class="nb-faded-text">(
+          array $input
+              =
+              array(), int $flags
+              =
+              0, string $iterator_class
+              =
+              "ArrayIterator"
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Tries to autodetect the optimal number of process by counting the number
+of processors.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$input</th>
+<td>array</td>
+<td><em><p>Input for the array object.</p></em></td>
+</tr>
+<tr>
+<th>$flags</th>
+<td>int</td>
+<td><em><p>flags for the array object.</p></em></td>
+</tr>
+<tr>
+<th>$iterator_class</th>
+<td>string</td>
+<td><em><p>Iterator class for this array object.</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::addWorker()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">addWorker</span><span class="nb-faded-text">(
+          <a href="db_contrib_DocBlox_Parallel_Worker.html#%5CDocBlox_Parallel_Worker">\DocBlox_Parallel_Worker</a> $worker
+          )
+        </span>
+        :
+          <a href="db_contrib_DocBlox_Parallel_Manager.html#%5CDocBlox_Parallel_Manager">\DocBlox_Parallel_Manager</a></code><div class="description"><p class="short_description">Convenience method to make the addition of workers explicit and allow a
+fluent interface.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$worker</th>
+<td><a href="db_contrib_DocBlox_Parallel_Worker.html#%5CDocBlox_Parallel_Worker">\DocBlox_Parallel_Worker</a></td>
+<td><em><p>The worker to add onto the queue.</p></em></td>
+</tr>
+</table>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_contrib_DocBlox_Parallel_Manager.html#%5CDocBlox_Parallel_Manager">\DocBlox_Parallel_Manager</a></td>
+<td></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Fluent</dt>
+<dd>This method is part of a fluent interface and will return the same instance
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::append()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">append</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::asort()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">asort</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::checkRequirements()" class="anchor"></a><div class="method protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">checkRequirements</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          bool</code><div class="description"><p class="short_description">Returns true when all requirements are met.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>bool</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::count()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">count</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::exchangeArray()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">exchangeArray</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::execute()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">execute</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Executes each worker.</p></div>
+<div class="code-tabs"><div class="long-description"><p>This method loops through the list of workers and tries to fork as
+many times as the ProcessLimit dictates at the same time.</p></div></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::forkAndRun()" class="anchor"></a><div class="method protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">forkAndRun</span><span class="nb-faded-text">(
+          <a href="db_contrib_DocBlox_Parallel_Worker.html#%5CDocBlox_Parallel_Worker">\DocBlox_Parallel_Worker</a> $worker, \int[] $processes
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Forks the current process and calls the Worker's execute method OR
+handles the parent process' execution.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>This is the really tricky part of the forking mechanism. Here we invoke
+{@link http://www.php.net/manual/en/function.pcntl-fork.php pcntl_fork}
+and either execute the forked process or deal with the parent's process
+based on in which process we are.</p>
+
+<p>To fully understand what is going on here it is recommended to read the
+PHP manual page on
+{@link http://www.php.net/manual/en/function.pcntl-fork.php pcntl_fork}
+and associated articles.</p>
+
+<p>If there are more workers than may be ran simultaneously then this method
+will wait until a slot becomes available and then starts the next worker.</p></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$worker</th>
+<td><a href="db_contrib_DocBlox_Parallel_Worker.html#%5CDocBlox_Parallel_Worker">\DocBlox_Parallel_Worker</a></td>
+<td><em><p>The worker to process.</p></em></td>
+</tr>
+<tr>
+<th>$processes</th>
+<td>\int[]</td>
+<td><em><p>&$processes The list of running processes.</p>
+</em></td>
+</tr>
+</table>
+<strong>Throws</strong><table class="argument-info">
+<thead><tr>
+<th>Exception</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="http://php.net/manual/en/class.runtimeexception.php">\RuntimeException</a></td>
+<td><em>if we are unable to fork.</em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::getArrayCopy()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getArrayCopy</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::getFlags()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getFlags</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::getIterator()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getIterator</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::getIteratorClass()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getIteratorClass</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::getProcessLimit()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getProcessLimit</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          int</code><div class="description"><p class="short_description">Returns the current limit on the amount of processes that can be
+executed at the same time.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>int</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::isRunning()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">isRunning</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          boolean</code><div class="description"><p class="short_description">Returns whether the manager is executing the workers.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>boolean</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::ksort()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">ksort</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::natcasesort()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">natcasesort</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::natsort()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">natsort</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::offsetExists()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">offsetExists</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::offsetGet()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">offsetGet</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::offsetSet()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">offsetSet</span><span class="nb-faded-text">(
+          int $index, <a href="db_contrib_DocBlox_Parallel_Worker.html#%5CDocBlox_Parallel_Worker">\DocBlox_Parallel_Worker</a> $newval
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Adds a worker to to the queue.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>This method will prepare a worker to be executed in parallel once the
+execute method is invoked.
+A fluent interface is provided so that you can chain multiple workers
+in one call.</p>
+
+<p>Example:</p>
+
+<p>$cb1 = function() { var_dump('a'); sleep(1); };
+   $cb2 = function() { var_dump('b'); sleep(1); };</p>
+
+<p>$mgr = new DocBlox_Parallel_Manager();
+   $mgr->setProcessLimit(2)
+       ->addWorker(new DocBlox_Parallel_Worker($cb1))
+       ->addWorker(new DocBlox_Parallel_Worker($cb2))
+       ->execute();</p></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$index</th>
+<td>int</td>
+<td><em><p>The key for this worker.</p></em></td>
+</tr>
+<tr>
+<th>$newval</th>
+<td><a href="db_contrib_DocBlox_Parallel_Worker.html#%5CDocBlox_Parallel_Worker">\DocBlox_Parallel_Worker</a></td>
+<td><em><p>The worker to add onto the queue.</p></em></td>
+</tr>
+</table>
+<strong>Throws</strong><table class="argument-info">
+<thead><tr>
+<th>Exception</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="http://php.net/manual/en/class.runtimeexception.php">\RuntimeException</a></td>
+<td><em>if this method is invoked while the manager is busy executing tasks.</em></td>
+</tr>
+<tr>
+<td><a href="http://php.net/manual/en/class.invalidargumentexception.php">\InvalidArgumentException</a></td>
+<td><em>if the provided element is not of type DocBlox_Parallel_Worker.</em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>See</dt>
+<dd>
+<a href="db_contrib_DocBlox_Parallel_Manager.html#%5CDocBlox_Parallel_Manager::execute()">\DocBlox_Parallel_Manager::execute()</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::offsetUnset()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">offsetUnset</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::serialize()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">serialize</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::setFlags()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setFlags</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::setIteratorClass()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setIteratorClass</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::setProcessLimit()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setProcessLimit</span><span class="nb-faded-text">(
+          int $process_limit
+          )
+        </span>
+        :
+          <a href="db_contrib_DocBlox_Parallel_Manager.html#%5CDocBlox_Parallel_Manager">\DocBlox_Parallel_Manager</a></code><div class="description"><p class="short_description">Sets how many processes at most to execute at the same time.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>A fluent interface is provided so that you can chain multiple workers
+in one call.</p></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$process_limit</th>
+<td>int</td>
+<td><em><p>The limit, minimum of 1</p></em></td>
+</tr>
+</table>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_contrib_DocBlox_Parallel_Manager.html#%5CDocBlox_Parallel_Manager">\DocBlox_Parallel_Manager</a></td>
+<td></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Fluent</dt>
+<dd>This method is part of a fluent interface and will return the same instance
+         
+    </dd>
+<dt>See</dt>
+<dd>
+<a href="db_contrib_DocBlox_Parallel_Manager.html#%5CDocBlox_Parallel_Manager::addWorker()">\DocBlox_Parallel_Manager::addWorker()</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::startExecution()" class="anchor"></a><div class="method protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">startExecution</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          \int[]</code><div class="description"><p class="short_description">Notifies manager that execution has started, checks requirements and
+returns array for child processes.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>If forking is not available because library requirements are not met
+than the list of workers is processed in series and a E_USER_NOTICE is
+triggered.</p></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>\int[]</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::stopExecution()" class="anchor"></a><div class="method protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">stopExecution</span><span class="nb-faded-text">(
+          \int[] $processes
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Waits for all processes to have finished and notifies the manager that
+execution has stopped.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$processes</th>
+<td>\int[]</td>
+<td><em><p>&$processes List of running processes.</p>
+</em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::uasort()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">uasort</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::uksort()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">uksort</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+<a id="\DocBlox_Parallel_Manager::unserialize()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">unserialize</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+</div>
+</div>
+</div>
+<small xmlns="" class="footer">Documentation was generated by <a href="http://docblox-project.org">DocBlox 0.18.1</a>.
+    </small></body></html>

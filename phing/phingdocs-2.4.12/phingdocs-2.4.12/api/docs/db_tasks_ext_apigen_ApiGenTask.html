@@ -1,0 +1,1701 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Phing API Documentation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" href="css/jquery-ui.css" type="text/css"></link><link rel="stylesheet" href="css/docblox/jquery-ui-1.8.16.custom.css" type="text/css"></link><link rel="stylesheet" href="css/jquery.treeview.css" type="text/css"></link><link rel="stylesheet" href="css/theme.css" type="text/css"></link><script type="text/javascript" src="js/jquery-1.4.2.min.js"></script><script type="text/javascript" src="js/jquery-ui-1.8.2.custom.min.js"></script><script type="text/javascript" src="js/jquery.tools.min.js"></script><script type="text/javascript" src="js/jquery.cookie.js"></script><script type="text/javascript" src="js/jquery.treeview.js"></script><script type="text/javascript">
+            $(document).ready(function() {
+                $(".filetree").treeview({
+                    collapsed: true,
+                    persist: "cookie"
+                });
+
+                $("#accordion").accordion({
+                    collapsible: true,
+                    autoHeight:  false,
+                    fillSpace:   true
+                });
+
+                $(".tabs").tabs();
+            });
+        </script></head><body><div xmlns="" id="content">
+<script xmlns:dbx="http://docblox-project.org/xsl/functions">
+
+      function filterElements()
+      {
+        inherited = !$('#show-inherited').hasClass('deselected');
+        public    = !$('#show-public').hasClass('deselected');
+        protected = !$('#show-protected').hasClass('deselected');
+        private   = !$('#show-private').hasClass('deselected');
+
+        $('div.public').each(function(index, val) {
+            $(val).toggle(public && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.protected').each(function(index, val) {
+            $(val).toggle(protected && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.private').each(function(index, val) {
+            $(val).toggle(private && !($(val).hasClass('inherited_from') && !inherited));
+        });
+      }
+
+      $(document).ready(function() {
+        $('a.gripper').click(function() {
+            $(this).nextAll('div.code-tabs').slideToggle();
+            $(this).children('img').toggle();
+            return false;
+        });
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').css('cursor', 'pointer');
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').click(function() {
+            $(this).parent().nextAll('div.code-tabs').slideToggle();
+            $(this).parent().prevAll('a.gripper').children('img').toggle();
+            return false;
+        });
+
+        $('div.code-tabs').hide();
+        $('a.gripper').show();
+        $('div.code-tabs:empty').prevAll('a.gripper').html('');
+
+        $('#show-public, #show-protected, #show-private, #show-inherited')
+            .css('cursor', 'pointer')
+            .click(function(){
+                $(this).toggleClass('deselected');
+                if ($(this).hasClass('deselected')) {
+                  $(this).fadeTo('fast', '0.4');
+                } else {
+                  $(this).fadeTo('fast', '1.0');
+                }
+                filterElements();
+                return false;
+            });
+        $('#show-protected, #show-private').click();
+
+        // add the sliding behaviour to the file navigation and show it
+        // it is initially hidden for non-JS users.
+        $("#file-nav-box").show().hover(function() {
+            $("#file-nav-container").slideDown(400);
+        }, function() {
+            $("#file-nav-container").slideUp(400);
+        });
+      });
+
+      
+    </script><h1 xmlns:dbx="http://docblox-project.org/xsl/functions" class="file">tasks/ext/apigen/ApiGenTask.php</h1>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" id="file-nav-box">
+<div id="file-nav-options">
+              Show:
+              <img src="images/icons/visibility_public.png" id="show-public"><img src="images/icons/visibility_protected.png" id="show-protected"><img src="images/icons/visibility_private.png" id="show-private"><span class="attribute" id="show-inherited">inherited</span>
+</div>
+<div id="file-nav-container">
+<ul id="file-nav"><li>
+<a href="#classes"><img src="images/icons/class.png" height="14">
+                          Classes
+                      </a><ul><li><a href="#%5CApiGenTask">\ApiGenTask</a></li></ul>
+</li></ul>
+<div style="clear: left;"></div>
+</div>
+<div id="file-nav-tab">
+              Table of Contents
+          </div>
+</div>
+<a xmlns:dbx="http://docblox-project.org/xsl/functions" name="top" class="anchor"></a><div id="file-description">
+<p xmlns:dbx="http://docblox-project.org/xsl/functions" class="short-description">ApiGen task (http://apigen.org).</p>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="long-description"></div>
+</div>
+<dl class="file-info">
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Author</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="mailto:martin@smasty.net">Martin Srank</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Author</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="mailto:kukulich@kukulich.cz">Jaroslav Hanslík</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Package</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">phing.tasks.ext.apigen
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Since</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">2.4.10
+         
+    </dd>
+</dl>
+<a name="classes" class="anchor"></a><a xmlns:dbx="http://docblox-project.org/xsl/functions" id="\ApiGenTask" class="anchor"></a><h2 xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">\ApiGenTask<div class="to-top"><a href="#top">jump to top</a></div>
+</h2>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">
+<small class="package"><b>Package: </b>phing\tasks\ext\apigen</small><p class="short-description">ApiGen task (http://apigen.org).</p>
+<div class="long-description"><p>Use {@link Project#createTask} to register a new Task.</p></div>
+<dl class="class-info">
+<dt>Parent(s)</dt>
+<dd>
+<a href="db_Task.html#%5CTask">\Task</a>
+            &lt;
+            <a href="db_ProjectComponent.html#%5CProjectComponent" style="color: gray; font-size: 0.8em
+                ">\ProjectComponent</a>
+</dd>
+<dt>Author</dt>
+<dd>
+<a href="mailto:martin@smasty.net">Martin Srank</a>
+         
+    </dd>
+<dt>Author</dt>
+<dd>
+<a href="mailto:kukulich@kukulich.cz">Jaroslav Hanslík</a>
+         
+    </dd>
+<dt>Copyright</dt>
+<dd>2001,2002 THYRELL. All rights reserved
+         
+    </dd>
+<dt>Since</dt>
+<dd>2.4.10
+         
+    </dd>
+<dt>Version</dt>
+<dd>$Id$
+         
+    </dd>
+</dl>
+<h3>Properties</h3>
+<div>
+<a id="\ApiGenTask::$description" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">string
+                 <span class="highlight">$description</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Description of the task</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24description">\Task::$$description</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24description">\Task::$$description</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$executable" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">string
+                 <span class="highlight">$executable</span>= ''apigen''
+                </code><div class="description">
+<p class="short-description">Default ApiGen executable name.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>'apigen'</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$location" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\Location
+                 <span class="highlight">$location</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Stored buildfile location</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24location">\Task::$$location</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_parser_Location.html#%5CLocation">\Location</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24location">\Task::$$location</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$options" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">array
+                 <span class="highlight">$options</span>= 'array(
+        'progressbar' =&gt; false,
+        'colors' =&gt; false,
+        'update-check' =&gt; false
+    )'
+                </code><div class="description">
+<p class="short-description">Default options for ApiGen.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>array(
+        'progressbar' =&gt; false,
+        'colors' =&gt; false,
+        'update-check' =&gt; false
+    )</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>array</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$project" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\Project
+                 <span class="highlight">$project</span>= 'null'
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Holds a reference to the project that a project component
+(a task, a target, etc.) belongs to</p>A reference to the current project instance<small>Inherited from:
+                        <a href="db_ProjectComponent.html#%5CProjectComponent::%24%24project">\ProjectComponent::$$project</a><a href="db_Task.html#%5CTask::%24%24project">\Task::$$project</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>null</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_Project.html#%5CProject">\Project</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_ProjectComponent.html#%5CProjectComponent::%24%24project">\ProjectComponent::$$project</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24project">\Task::$$project</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$target" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\Target
+                 <span class="highlight">$target</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Owning Target object</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24target">\Task::$$target</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_Target.html#%5CTarget">\Target</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24target">\Task::$$target</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$taskName" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">string
+                 <span class="highlight">$taskName</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Taskname for logger</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24taskName">\Task::$$taskName</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24taskName">\Task::$$taskName</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$taskType" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">string
+                 <span class="highlight">$taskType</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Internal taskname (req)</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24taskType">\Task::$$taskType</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24taskType">\Task::$$taskType</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::$wrapper" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\RuntimeConfigurable
+                 <span class="highlight">$wrapper</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Wrapper of the task</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24wrapper">\Task::$$wrapper</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24wrapper">\Task::$$wrapper</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+<h3>Methods</h3>
+<div>
+<a id="\ApiGenTask::constructArguments()" class="anchor"></a><div class="method protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">constructArguments</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description"><p class="short_description">Generates command line arguments for the ApiGen executable.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getDescription()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getDescription</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the textual description of the task</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getDescription()">\Task::getDescription()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>The text description of the task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getLocation()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getLocation</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_parser_Location.html#%5CLocation">\Location</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the location within the buildfile this task occurs. Used
+by {@link BuildException} to give detailed error messages.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getLocation()">\Task::getLocation()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_parser_Location.html#%5CLocation">\Location</a></td>
+<td>The location object describing the position of this task within the buildfile.</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getOwningTarget()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getOwningTarget</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_Target.html#%5CTarget">\Target</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the owning target of this task.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getOwningTarget()">\Task::getOwningTarget()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_Target.html#%5CTarget">\Target</a></td>
+<td>The target object that owns this task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getProject()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getProject</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_Project.html#%5CProject">\Project</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns a reference to current project</p>
+<small>Inherited from:
+                    <a href="db_ProjectComponent.html#%5CProjectComponent::getProject()">\ProjectComponent::getProject()</a><a href="db_Task.html#%5CTask::getProject()">\Task::getProject()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_Project.html#%5CProject">\Project</a></td>
+<td>Reference to current porject object</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getRegisterSlot()" class="anchor"></a><div class="method protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">getRegisterSlot</span><span class="nb-faded-text">(
+          string $slotName
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns a name</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getRegisterSlot()">\Task::getRegisterSlot()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$slotName</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getRuntimeConfigurableWrapper()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getRuntimeConfigurableWrapper</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the wrapper object for runtime configuration</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getRuntimeConfigurableWrapper()">\Task::getRuntimeConfigurableWrapper()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></td>
+<td>The wrapper object used by this task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getTaskName()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getTaskName</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the name of task, used only for log messages</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getTaskName()">\Task::getTaskName()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>Name of this task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::getTaskType()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getTaskType</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the name of the task under which it was invoked,
+usually the XML tagname</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getTaskType()">\Task::getTaskType()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>The type of this task (XML Tag)</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::init()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">init</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Called by the parser to let the task initialize properly.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::init()">\Task::init()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"><p>Should throw a BuildException if something goes wrong with the build</p>
+
+<p>This is abstract here, but may not be overloaded by subclasses.</p></div>
+<strong>Throws</strong><table class="argument-info">
+<thead><tr>
+<th>Exception</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_BuildException.html#%5CBuildException">\BuildException</a></td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::log()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">log</span><span class="nb-faded-text">(
+          string $msg, integer $level
+              =
+              Project::MSG_INFO
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Provides a project level log event to the task.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::log()">\Task::log()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$msg</th>
+<td>string</td>
+<td><em><p>The message to log</p></em></td>
+</tr>
+<tr>
+<th>$level</th>
+<td>integer</td>
+<td><em><p>The priority of the message</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>See</dt>
+<dd>
+<a href="db_BuildEvent.html#%5CBuildEvent">\BuildEvent</a>
+         
+    </dd>
+<dt>See</dt>
+<dd>
+<a href="db_BuildListener.html#%5CBuildListener">\BuildListener</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::main()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">main</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Runs ApiGen.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>Should throw a BuildException if someting goes wrong with the build</p>
+
+<p>This is abstract here. Must be overloaded by real tasks.</p></div>
+<strong>Throws</strong><table class="argument-info">
+<thead><tr>
+<th>Exception</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_BuildException.html#%5CBuildException">\BuildException</a></td>
+<td><em>If something is wrong.</em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>See</dt>
+<dd>
+<a href="db_Task.html#%5CTask::main()">\Task::main()</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::maybeConfigure()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">maybeConfigure</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Configure this task if it hasn't been done already.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::maybeConfigure()">\Task::maybeConfigure()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::perform()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">perform</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Perfrom this task</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::perform()">\Task::perform()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setAccessLevels()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setAccessLevels</span><span class="nb-faded-text">(
+          string $accessLevels
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the element access levels.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>Documentation only for methods and properties with the given access level will be generated.</p></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$accessLevels</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setAllowedHtml()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setAllowedHtml</span><span class="nb-faded-text">(
+          string $allowedHtml
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets a list of HTML tags allowed in the documentation.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$allowedHtml</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setAutocomplete()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setAutocomplete</span><span class="nb-faded-text">(
+          string $autocomplete
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets element types for search input autocomplete.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$autocomplete</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setBaseUrl()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setBaseUrl</span><span class="nb-faded-text">(
+          string $baseUrl
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the documentation base URL.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$baseUrl</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setCharset()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setCharset</span><span class="nb-faded-text">(
+          string $charset
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the character set of source files.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$charset</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setConfig()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setConfig</span><span class="nb-faded-text">(
+          string $config
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the config file name.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$config</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setDebug()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDebug</span><span class="nb-faded-text">(
+          boolean $debug
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Enables/disables the debug mode.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$debug</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setDeprecated()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDeprecated</span><span class="nb-faded-text">(
+          boolean $deprecated
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if documentation for deprecated elements should be generated.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$deprecated</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setDescription()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDescription</span><span class="nb-faded-text">(
+          string $desc
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets a textual description of the task</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setDescription()">\Task::setDescription()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$desc</th>
+<td>string</td>
+<td><em><p>The text describing the task</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setDestination()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDestination</span><span class="nb-faded-text">(
+          string $destination
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the destination directory.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$destination</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setDownload()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDownload</span><span class="nb-faded-text">(
+          boolean $download
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if a link to download documentation as a ZIP archive should be generated.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$download</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setExclude()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setExclude</span><span class="nb-faded-text">(
+          string $exclude
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets masks (case sensitive) to exclude files or directories from processing.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$exclude</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setExecutable()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setExecutable</span><span class="nb-faded-text">(
+          string $executable
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the ApiGen executable name.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$executable</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setExtensions()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setExtensions</span><span class="nb-faded-text">(
+          string $extensions
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets list of allowed file extensions.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$extensions</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setGoogleAnalytics()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setGoogleAnalytics</span><span class="nb-faded-text">(
+          string $googleAnalytics
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the Google Analytics tracking code.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$googleAnalytics</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setGoogleCseId()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setGoogleCseId</span><span class="nb-faded-text">(
+          string $googleCseId
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the Google Custom Search ID.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$googleCseId</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setGoogleCseLabel()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setGoogleCseLabel</span><span class="nb-faded-text">(
+          string $googleCseLabel
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the Google Custom Search label.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$googleCseLabel</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setGroups()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setGroups</span><span class="nb-faded-text">(
+          string $groups
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets how elements should be grouped in the menu.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$groups</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setInternal()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setInternal</span><span class="nb-faded-text">(
+          boolean $internal
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if documentation for elements marked as internal and internal documentation parts should be generated.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$internal</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setLocation()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setLocation</span><span class="nb-faded-text">(
+          <a href="db_parser_Location.html#%5CLocation">\Location</a> $location
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the location within the buildfile this task occurs. Called by
+the parser to set location information.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setLocation()">\Task::setLocation()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$location</th>
+<td><a href="db_parser_Location.html#%5CLocation">\Location</a></td>
+<td><em><p>The location object describing the position of this task within the buildfile.</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setMain()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setMain</span><span class="nb-faded-text">(
+          string $main
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the main project name prefix.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$main</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setOwningTarget()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setOwningTarget</span><span class="nb-faded-text">(
+          <a href="db_Target.html#%5CTarget">\Target</a> $target
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the owning target this task belongs to.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setOwningTarget()">\Task::setOwningTarget()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$target</th>
+<td><a href="db_Target.html#%5CTarget">\Target</a></td>
+<td><em><p>Reference to owning target</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setPhp()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setPhp</span><span class="nb-faded-text">(
+          boolean $php
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if documentation for PHP internal classes should be generated.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$php</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setProject()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setProject</span><span class="nb-faded-text">(
+          <a href="db_Project.html#%5CProject">\Project</a> $project
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">References the project to the current component.</p>
+<small>Inherited from:
+                    <a href="db_ProjectComponent.html#%5CProjectComponent::setProject()">\ProjectComponent::setProject()</a><a href="db_Task.html#%5CTask::setProject()">\Task::setProject()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$project</th>
+<td><a href="db_Project.html#%5CProject">\Project</a></td>
+<td><em><p>The reference to the current project</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setQuiet()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setQuiet</span><span class="nb-faded-text">(
+          boolean $quiet
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Enables/disables scaning and generating messages.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$quiet</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setReport()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setReport</span><span class="nb-faded-text">(
+          string $report
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets a file name for checkstyle report of poorly documented elements.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$report</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setRuntimeConfigurableWrapper()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setRuntimeConfigurableWrapper</span><span class="nb-faded-text">(
+          <a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a> $wrapper
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the wrapper object this task should use for runtime
+ configurable elements.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setRuntimeConfigurableWrapper()">\Task::setRuntimeConfigurableWrapper()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$wrapper</th>
+<td><a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></td>
+<td><em><p>The wrapper object this task should use</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setSkipDocPath()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setSkipDocPath</span><span class="nb-faded-text">(
+          string $skipDocPath
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets masks to exclude elements from documentation generating.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$skipDocPath</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setSkipDocPrefix()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setSkipDocPrefix</span><span class="nb-faded-text">(
+          string $skipDocPrefix
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets a name prefix to exclude elements from documentation generating.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$skipDocPrefix</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setSource()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setSource</span><span class="nb-faded-text">(
+          string $source
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets source files or directories.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$source</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setSourceCode()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setSourceCode</span><span class="nb-faded-text">(
+          boolean $sourceCode
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if highlighted source code files should be generated.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$sourceCode</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setTaskName()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTaskName</span><span class="nb-faded-text">(
+          string $name
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the name of this task for log messages</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setTaskName()">\Task::setTaskName()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$name</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>A string representing the name of this task for log</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setTaskType()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTaskType</span><span class="nb-faded-text">(
+          string $name
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the type of the task. Usually this is the name of the XML tag</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setTaskType()">\Task::setTaskType()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$name</th>
+<td>string</td>
+<td><em><p>The type of this task (XML Tag)</p>
+</em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setTemplateConfig()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTemplateConfig</span><span class="nb-faded-text">(
+          string $templateConfig
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the template config file name.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$templateConfig</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setTitle()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTitle</span><span class="nb-faded-text">(
+          string $title
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the title of generated documentation.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$title</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setTodo()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTodo</span><span class="nb-faded-text">(
+          boolean $todo
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if documentation of tasks should be generated.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$todo</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setTree()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTree</span><span class="nb-faded-text">(
+          boolean $tree
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if tree view of classes, interfaces, traits and exceptions should be generated.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$tree</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setUpdateCheck()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setUpdateCheck</span><span class="nb-faded-text">(
+          boolean $updateCheck
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Enables/disables the check for ApiGen updates.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$updateCheck</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\ApiGenTask::setWipeout()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setWipeout</span><span class="nb-faded-text">(
+          boolean $wipeout
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets if the destination directory should be wiped out first.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$wipeout</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+</div>
+</div>
+<small xmlns="" class="footer">Documentation was generated by <a href="http://docblox-project.org">DocBlox 0.18.1</a>.
+    </small></body></html>

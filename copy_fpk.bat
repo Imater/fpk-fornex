@@ -1,0 +1,1 @@
+xcopy "z:\fpk\*.*" "C:\Users\Mac\Dropbox\*.*" /E /F /H /R /K /Y /D

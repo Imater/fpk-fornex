@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Использование jqGrid</title>
+
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    
+    <meta name="description" content="использование jqGrid" />
+    <meta name="keywords" content="jqGrid, javascript, jquery" />
+    
+    <link rel="stylesheet" type="text/css" media="screen" href="themes/basic/grid.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="themes/jqModal.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+<body>
+    <table id="list" class="scroll" style="margin-top:15px;margin-right:15px;margin-bottom:30px; height:100%;width:100%;font-size:80%"></table> 
+    <div id="pager" class="scroll" style="text-align:center;"></div>
+    <p>Для редактирования сделайте двойной клик на строке</p>
+    <p>Enter - сохраняет новое значение</p>
+    <p>Esc - отмена</p>
+    
+    <script type="text/javascript" src="jquery-1.3.1.min.js"></script>
+    <script type="text/javascript" src="jquery.jqGrid copy.js"></script>
+    <script type="text/javascript">
+    jQuery(document).ready(function(){
+        var lastSel;
+        var ls=jQuery("#list").jqGrid({
+            url:'getdata.php?brand=Peugeot',
+            datatype: 'json',
+            mtype: 'POST',
+            colNames:['#', 'ФИО', 'Должность', 'Клиентов', 'Бренд', 'Email', 'День рождения', 'Последний визит'],
+            colModel :[
+                {name:'id', index:'id', width:50}
+                ,{name:'fio', index:'fio', width:300, align:'left', editable:true, edittype:"text",search:true}
+                ,{name:'job', index:'job', width:200, editable:true, edittype:"text"}
+                ,{name:'clients', index:'clients', width:90, align:'left', editable:true, edittype:"text"}
+                ,{name:'brand', index:'brand', width:150, align:'left', editable:true, edittype:"text"}
+                ,{name:'email', index:'email', width:300, align:'left', editable:true, edittype:"text"}
+                ,{name:'birthday', index:'birthday', width:150, align:'left', editable:true, edittype:"text"}
+                ,{name:'lastvizit', index:'lastvizit', width:150, align:'left', editable:true, edittype:"text"}
+                ],
+            pager: jQuery('#pager'),
+            rowNum:100,
+            rowList:[5,10,30,100],
+            height:"500px",
+            sortname: 'job',
+            sortorder: "asc",
+            
+            viewrecords: true,
+            imgpath: 'themes/basic/images',
+            caption: 'Данные пользователей',
+            ondblClickRow: function(id) {
+                if (id && id != lastSel) {
+                    jQuery("#list").restoreRow(lastSel);
+                    jQuery("#list").editRow(id, true);
+                    lastSel = id;
+                }
+            },
+            editurl: 'saverow.php'
+        }); 
+        //ls.jqGrid('navGrid','#pager');
+    }); 
+    </script>
+</body>
+</html>

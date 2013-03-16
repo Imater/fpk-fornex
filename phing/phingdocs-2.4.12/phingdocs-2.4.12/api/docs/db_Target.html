@@ -1,0 +1,819 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Phing API Documentation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" href="css/jquery-ui.css" type="text/css"></link><link rel="stylesheet" href="css/docblox/jquery-ui-1.8.16.custom.css" type="text/css"></link><link rel="stylesheet" href="css/jquery.treeview.css" type="text/css"></link><link rel="stylesheet" href="css/theme.css" type="text/css"></link><script type="text/javascript" src="js/jquery-1.4.2.min.js"></script><script type="text/javascript" src="js/jquery-ui-1.8.2.custom.min.js"></script><script type="text/javascript" src="js/jquery.tools.min.js"></script><script type="text/javascript" src="js/jquery.cookie.js"></script><script type="text/javascript" src="js/jquery.treeview.js"></script><script type="text/javascript">
+            $(document).ready(function() {
+                $(".filetree").treeview({
+                    collapsed: true,
+                    persist: "cookie"
+                });
+
+                $("#accordion").accordion({
+                    collapsible: true,
+                    autoHeight:  false,
+                    fillSpace:   true
+                });
+
+                $(".tabs").tabs();
+            });
+        </script></head><body><div xmlns="" id="content">
+<script xmlns:dbx="http://docblox-project.org/xsl/functions">
+
+      function filterElements()
+      {
+        inherited = !$('#show-inherited').hasClass('deselected');
+        public    = !$('#show-public').hasClass('deselected');
+        protected = !$('#show-protected').hasClass('deselected');
+        private   = !$('#show-private').hasClass('deselected');
+
+        $('div.public').each(function(index, val) {
+            $(val).toggle(public && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.protected').each(function(index, val) {
+            $(val).toggle(protected && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.private').each(function(index, val) {
+            $(val).toggle(private && !($(val).hasClass('inherited_from') && !inherited));
+        });
+      }
+
+      $(document).ready(function() {
+        $('a.gripper').click(function() {
+            $(this).nextAll('div.code-tabs').slideToggle();
+            $(this).children('img').toggle();
+            return false;
+        });
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').css('cursor', 'pointer');
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').click(function() {
+            $(this).parent().nextAll('div.code-tabs').slideToggle();
+            $(this).parent().prevAll('a.gripper').children('img').toggle();
+            return false;
+        });
+
+        $('div.code-tabs').hide();
+        $('a.gripper').show();
+        $('div.code-tabs:empty').prevAll('a.gripper').html('');
+
+        $('#show-public, #show-protected, #show-private, #show-inherited')
+            .css('cursor', 'pointer')
+            .click(function(){
+                $(this).toggleClass('deselected');
+                if ($(this).hasClass('deselected')) {
+                  $(this).fadeTo('fast', '0.4');
+                } else {
+                  $(this).fadeTo('fast', '1.0');
+                }
+                filterElements();
+                return false;
+            });
+        $('#show-protected, #show-private').click();
+
+        // add the sliding behaviour to the file navigation and show it
+        // it is initially hidden for non-JS users.
+        $("#file-nav-box").show().hover(function() {
+            $("#file-nav-container").slideDown(400);
+        }, function() {
+            $("#file-nav-container").slideUp(400);
+        });
+      });
+
+      
+    </script><h1 xmlns:dbx="http://docblox-project.org/xsl/functions" class="file">Target.php</h1>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" id="file-nav-box">
+<div id="file-nav-options">
+              Show:
+              <img src="images/icons/visibility_public.png" id="show-public"><img src="images/icons/visibility_protected.png" id="show-protected"><img src="images/icons/visibility_private.png" id="show-private"><span class="attribute" id="show-inherited">inherited</span>
+</div>
+<div id="file-nav-container">
+<ul id="file-nav"><li>
+<a href="#classes"><img src="images/icons/class.png" height="14">
+                          Classes
+                      </a><ul><li><a href="#%5CTarget">\Target</a></li></ul>
+</li></ul>
+<div style="clear: left;"></div>
+</div>
+<div id="file-nav-tab">
+              Table of Contents
+          </div>
+</div>
+<a xmlns:dbx="http://docblox-project.org/xsl/functions" name="top" class="anchor"></a><div id="file-description">
+<p xmlns:dbx="http://docblox-project.org/xsl/functions" class="short-description">The Target component. Carries all required target data. Implements the
+ abstract class {@link TaskContainer}</p>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="long-description"><p>@author    Andreas Aderhold <a href="mai&#108;&#116;&#111;&#58;&#97;&#110;&#100;&#105;&#64;&#98;&#105;&#110;&#97;&#114;&#121;&#x63;&#x6c;&#x6f;&#x75;&#x64;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#110;&#100;&#105;&#64;&#98;&#105;&#110;&#97;&#114;&#121;&#x63;&#x6c;&#x6f;&#x75;&#x64;&#x2e;&#x63;&#x6f;&#x6d;</a></p></div>
+</div>
+<dl class="file-info">
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Access</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">public
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Copyright</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">2001,2002 THYRELL. All rights reserved
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Package</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">phing
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">See</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="db_TaskContainer.html#%5CTaskContainer">\TaskContainer</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Version</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">$Id: b6779ff7860ec7a7a84d74a40ffcc9efa75255f7 $
+         
+    </dd>
+</dl>
+<a name="classes" class="anchor"></a><a xmlns:dbx="http://docblox-project.org/xsl/functions" id="\Target" class="anchor"></a><h2 xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">\Target<div class="to-top"><a href="#top">jump to top</a></div>
+</h2>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">
+<small class="package"><b>Package: </b>phing</small><p class="short-description">The Target component. Carries all required target data. Implements the
+ abstract class {@link TaskContainer}</p>
+<div class="long-description"><p>@author    Andreas Aderhold <a href="mai&#108;&#116;&#111;&#58;&#97;&#110;&#100;&#105;&#64;&#98;&#105;&#110;&#97;&#114;&#121;&#x63;&#x6c;&#x6f;&#x75;&#x64;&#x2e;&#x63;&#x6f;&#x6d;">&#97;&#110;&#100;&#105;&#64;&#98;&#105;&#110;&#97;&#114;&#121;&#x63;&#x6c;&#x6f;&#x75;&#x64;&#x2e;&#x63;&#x6f;&#x6d;</a></p></div>
+<dl class="class-info">
+<dt>Parent(s)</dt>
+<dd><a href="db_TaskContainer.html#%5CTaskContainer">\TaskContainer</a></dd>
+<dt>See</dt>
+<dd>
+<a href="db_TaskContainer.html#%5CTaskContainer">\TaskContainer</a>
+         
+    </dd>
+<dt>Access</dt>
+<dd>public
+         
+    </dd>
+<dt>Copyright</dt>
+<dd>2001,2002 THYRELL. All rights reserved
+         
+    </dd>
+<dt>Version</dt>
+<dd>$Id: b6779ff7860ec7a7a84d74a40ffcc9efa75255f7 $
+         
+    </dd>
+</dl>
+<h3>Properties</h3>
+<div>
+<a id="\Target::$children" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">array
+                 <span class="highlight">$children</span>= 'array()'
+                </code><div class="description">
+<p class="short-description">Holds objects of children of this target</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>array()</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>array</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::$dependencies" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">array
+                 <span class="highlight">$dependencies</span>= 'array()'
+                </code><div class="description">
+<p class="short-description">Dependencies</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>array()</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>array</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::$description" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">string
+                 <span class="highlight">$description</span>= ''
+                </code><div class="description">
+<p class="short-description">Description of this target</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::$hidden" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">boolean
+                 <span class="highlight">$hidden</span>= 'false'
+                </code><div class="description">
+<p class="short-description">Whether to hide target in targets list (-list -p switches)</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>false</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>boolean</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::$ifCondition" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">string
+                 <span class="highlight">$ifCondition</span>= '""'
+                </code><div class="description">
+<p class="short-description">The if condition from xml</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>""</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::$name" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">string
+                 <span class="highlight">$name</span>= ''
+                </code><div class="description">
+<p class="short-description">Name of target</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::$project" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">\Project
+                 <span class="highlight">$project</span>= ''
+                </code><div class="description">
+<p class="short-description">Rreference to project</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_Project.html#%5CProject">\Project</a></dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::$unlessCondition" class="anchor"></a><div class="property private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">string
+                 <span class="highlight">$unlessCondition</span>= '""'
+                </code><div class="description">
+<p class="short-description">The unless condition from xml</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>""</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+<h3>Methods</h3>
+<div>
+<a id="\Target::addDataType()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">addDataType</span><span class="nb-faded-text">(
+          <a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a> $rtc
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Adds a runtime configurable element to the list of this targets child
+elements.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$rtc</th>
+<td><a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></td>
+<td><em><p>The RuntimeConfigurable object</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Access</dt>
+<dd>public
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::addDependency()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">addDependency</span><span class="nb-faded-text">(
+          string $dependency
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Adds a singular dependent target name to the list</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$dependency</th>
+<td>string</td>
+<td><em><p>The dependency target to add</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Access</dt>
+<dd>public
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::addTask()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">addTask</span><span class="nb-faded-text">(
+          <a href="db_Task.html#%5CTask">\Task</a> $task
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Adds a task element to the list of this targets child elements</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$task</th>
+<td><a href="db_Task.html#%5CTask">\Task</a></td>
+<td><em><p>The task object to add</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Access</dt>
+<dd>public
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::getDependencies()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getDependencies</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          array</code><div class="description"><p class="short_description">Returns reference to indexed array of the dependencies this target has.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>array</td>
+<td>Referece to target dependencoes</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::getDescription()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getDescription</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description"><p class="short_description">Returns the description of this target.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>The description text of this target</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::getHidden()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getHidden</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          boolean</code><div class="description"><p class="short_description">Get target status. If true, target does not come in phing -list</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>boolean</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::getName()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getName</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description"><p class="short_description">Returns name of this target.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>The name of the target</td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Access</dt>
+<dd>public
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::getProject()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getProject</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_Project.html#%5CProject">\Project</a></code><div class="description"><p class="short_description">Returns reference to current project</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_Project.html#%5CProject">\Project</a></td>
+<td>Reference to current porject object</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::getTasks()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getTasks</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          array</code><div class="description"><p class="short_description">Returns an array of all tasks this target has as childrens.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>The task objects are copied here. Don't use this method to modify
+task objects.</p></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>array</td>
+<td>Task[]</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::isHidden()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">isHidden</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          boolean</code><div class="description"><p class="short_description">Alias for getHidden()</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>boolean</td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::main()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">main</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">The entry point for this class. Does some checking, then processes and
+performs the tasks for this target.</p></div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\Target::performTasks()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">performTasks</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Performs the tasks by calling the main method of this target that
+actually executes the tasks.</p></div>
+<div class="code-tabs"><div class="long-description"><p>This method is for ZE2 and used for proper exception handling of
+task exceptions.</p></div></div>
+<div class="clear"></div>
+</div>
+<a id="\Target::setDepends()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDepends</span><span class="nb-faded-text">(
+          string $depends
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the target dependencies from xml</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$depends</th>
+<td>string</td>
+<td><em><p>Comma separated list of targetnames that depend on this target</p></em></td>
+</tr>
+</table>
+<strong>Throws</strong><table class="argument-info">
+<thead><tr>
+<th>Exception</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_BuildException.html#%5CBuildException">\BuildException</a></td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::setDescription()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDescription</span><span class="nb-faded-text">(
+          string $description
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets a textual description of this target.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$description</th>
+<td>string</td>
+<td><em><p>The description text</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::setHidden()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setHidden</span><span class="nb-faded-text">(
+          boolean $flag
+          )
+        </span>
+        :
+          <a href="db_Target.html#%5CTarget">\Target</a></code><div class="description"><p class="short_description">Set target status. If true, target does not come in phing -list</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$flag</th>
+<td>boolean</td>
+<td><em></em></td>
+</tr>
+</table>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_Target.html#%5CTarget">\Target</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::setIf()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setIf</span><span class="nb-faded-text">(
+          string $property
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Set the if-condition from the XML tag, if any. The property name given
+as parameter must be present so the if condition evaluates to true</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$property</th>
+<td>string</td>
+<td><em><p>The property name that has to be present</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Access</dt>
+<dd>public
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::setName()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setName</span><span class="nb-faded-text">(
+          string $name
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Sets the name of the target</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$name</th>
+<td>string</td>
+<td><em><p>Name of this target</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::setProject()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setProject</span><span class="nb-faded-text">(
+          <a href="db_Project.html#%5CProject">\Project</a> $project
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">References the project to the current component.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$project</th>
+<td><a href="db_Project.html#%5CProject">\Project</a></td>
+<td><em><p>The reference to the current project</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::setUnless()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setUnless</span><span class="nb-faded-text">(
+          string $property
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Set the unless-condition from the XML tag, if any. The property name
+given as parameter must be present so the unless condition evaluates
+to true</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$property</th>
+<td>string</td>
+<td><em><p>The property name that has to be present</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>Access</dt>
+<dd>public
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::testIfCondition()" class="anchor"></a><div class="method private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private"><span class="highlight">testIfCondition</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          boolean</code><div class="description"><p class="short_description">Tests if the property set in ifConfiditon exists.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>boolean</td>
+<td>&lt;code&gt;true&lt;/code&gt; if the property specified in &lt;code&gt;$this-&gt;ifCondition&lt;/code&gt; exists; &lt;code&gt;false&lt;/code&gt; otherwise</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::testUnlessCondition()" class="anchor"></a><div class="method private">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private"><span class="highlight">testUnlessCondition</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          boolean</code><div class="description"><p class="short_description">Tests if the property set in unlessCondition exists.</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>boolean</td>
+<td>&lt;code&gt;true&lt;/code&gt; if the property specified in &lt;code&gt;$this-&gt;unlessCondition&lt;/code&gt; exists; &lt;code&gt;false&lt;/code&gt; otherwise</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\Target::toString()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">toString</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description"><p class="short_description">Returns a string representation of this target. In our case it
+simply returns the target name field</p></div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>The string representation of this target</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+</div>
+</div>
+<small xmlns="" class="footer">Documentation was generated by <a href="http://docblox-project.org">DocBlox 0.18.1</a>.
+    </small></body></html>

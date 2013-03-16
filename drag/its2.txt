@@ -1,0 +1,38 @@
+Key: HTTP_HOST; Value: localhost 
+Key: HTTP_CONNECTION; Value: keep-alive 
+Key: HTTP_REFERER; Value: http://localhost/fpk/drag/example.html 
+Key: CONTENT_LENGTH; Value: 6325 
+Key: HTTP_ORIGIN; Value: http://localhost 
+Key: HTTP_X_FILE_SIZE; Value: 6325 
+Key: HTTP_X_REQUESTED_WITH; Value: XMLHttpRequest 
+Key: HTTP_CACHE_CONTROL; Value: no-cache 
+Key: HTTP_X_FILE_NAME; Value: pangratz-dnd-file-upload-8fdc28c.zip 
+Key: HTTP_USER_AGENT; Value: Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_7_0; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.204 Safari/534.16 
+Key: CONTENT_TYPE; Value: multipart/form-data 
+Key: HTTP_ACCEPT; Value: */* 
+Key: HTTP_ACCEPT_ENCODING; Value: gzip,deflate,sdch 
+Key: HTTP_ACCEPT_LANGUAGE; Value: ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4 
+Key: HTTP_ACCEPT_CHARSET; Value: windows-1251,utf-8;q=0.7,*;q=0.3 
+Key: HTTP_COOKIE; Value: d1=2011-02-01; d2=2011-04-30; pass=a64d33f4d3ff0271e4c915089edae413; email=evetsel%40peugeotchel2.ru; showi=i1; mymanager=%D0%92%D1%81%D0%B5; fontsize=15; brand=Peugeot; fpk_id=133; fpk_job=%D0%93%D0%B5%D0%BD%D0%B5%D1%80%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9%20%D0%B4%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%BE%D1%80; menu=2; menu-current=15; wiki_password=a64d33f4d3ff0271e4c915089edae413; wiki_name=JohnWezel 
+Key: PATH; Value: /usr/bin:/bin:/usr/sbin:/sbin 
+Key: SERVER_SIGNATURE; Value:  
+Key: SERVER_SOFTWARE; Value: Apache 
+Key: SERVER_NAME; Value: localhost 
+Key: SERVER_ADDR; Value: 127.0.0.1 
+Key: SERVER_PORT; Value: 80 
+Key: REMOTE_ADDR; Value: 127.0.0.1 
+Key: DOCUMENT_ROOT; Value: /Applications/MAMP/htdocs 
+Key: SERVER_ADMIN; Value: you@example.com 
+Key: SCRIPT_FILENAME; Value: /Applications/MAMP/htdocs/fpk/drag/load.php 
+Key: REMOTE_PORT; Value: 58532 
+Key: GATEWAY_INTERFACE; Value: CGI/1.1 
+Key: SERVER_PROTOCOL; Value: HTTP/1.1 
+Key: REQUEST_METHOD; Value: POST 
+Key: QUERY_STRING; Value: s=1 
+Key: REQUEST_URI; Value: /fpk/drag/load.php?s=1 
+Key: SCRIPT_NAME; Value: /fpk/drag/load.php 
+Key: PHP_SELF; Value: /fpk/drag/load.php 
+Key: REQUEST_TIME; Value: 1301371741 
+Key: argv; Value: Array 
+Key: argc; Value: 1 
+rrr1111=

@@ -1,0 +1,1 @@
+SELECT *, (SELECT count(*) FROM 1_clients WHERE 1_clients.manager=1_users.fio) clients FROM 1_users WHERE 1_users.brand = "Peugeot" ORDER BY job asc LIMIT 0, 100

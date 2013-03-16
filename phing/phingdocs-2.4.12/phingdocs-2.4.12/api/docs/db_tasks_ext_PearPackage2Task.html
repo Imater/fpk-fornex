@@ -1,0 +1,2485 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Phing API Documentation</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" href="css/jquery-ui.css" type="text/css"></link><link rel="stylesheet" href="css/docblox/jquery-ui-1.8.16.custom.css" type="text/css"></link><link rel="stylesheet" href="css/jquery.treeview.css" type="text/css"></link><link rel="stylesheet" href="css/theme.css" type="text/css"></link><script type="text/javascript" src="js/jquery-1.4.2.min.js"></script><script type="text/javascript" src="js/jquery-ui-1.8.2.custom.min.js"></script><script type="text/javascript" src="js/jquery.tools.min.js"></script><script type="text/javascript" src="js/jquery.cookie.js"></script><script type="text/javascript" src="js/jquery.treeview.js"></script><script type="text/javascript">
+            $(document).ready(function() {
+                $(".filetree").treeview({
+                    collapsed: true,
+                    persist: "cookie"
+                });
+
+                $("#accordion").accordion({
+                    collapsible: true,
+                    autoHeight:  false,
+                    fillSpace:   true
+                });
+
+                $(".tabs").tabs();
+            });
+        </script></head><body><div xmlns="" id="content">
+<script xmlns:dbx="http://docblox-project.org/xsl/functions">
+
+      function filterElements()
+      {
+        inherited = !$('#show-inherited').hasClass('deselected');
+        public    = !$('#show-public').hasClass('deselected');
+        protected = !$('#show-protected').hasClass('deselected');
+        private   = !$('#show-private').hasClass('deselected');
+
+        $('div.public').each(function(index, val) {
+            $(val).toggle(public && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.protected').each(function(index, val) {
+            $(val).toggle(protected && !($(val).hasClass('inherited_from') && !inherited));
+        });
+        $('div.private').each(function(index, val) {
+            $(val).toggle(private && !($(val).hasClass('inherited_from') && !inherited));
+        });
+      }
+
+      $(document).ready(function() {
+        $('a.gripper').click(function() {
+            $(this).nextAll('div.code-tabs').slideToggle();
+            $(this).children('img').toggle();
+            return false;
+        });
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').css('cursor', 'pointer');
+
+        $('div.method code span.highlight,div.function code span.highlight,div.constant code span.highlight,div.property code span.highlight').click(function() {
+            $(this).parent().nextAll('div.code-tabs').slideToggle();
+            $(this).parent().prevAll('a.gripper').children('img').toggle();
+            return false;
+        });
+
+        $('div.code-tabs').hide();
+        $('a.gripper').show();
+        $('div.code-tabs:empty').prevAll('a.gripper').html('');
+
+        $('#show-public, #show-protected, #show-private, #show-inherited')
+            .css('cursor', 'pointer')
+            .click(function(){
+                $(this).toggleClass('deselected');
+                if ($(this).hasClass('deselected')) {
+                  $(this).fadeTo('fast', '0.4');
+                } else {
+                  $(this).fadeTo('fast', '1.0');
+                }
+                filterElements();
+                return false;
+            });
+        $('#show-protected, #show-private').click();
+
+        // add the sliding behaviour to the file navigation and show it
+        // it is initially hidden for non-JS users.
+        $("#file-nav-box").show().hover(function() {
+            $("#file-nav-container").slideDown(400);
+        }, function() {
+            $("#file-nav-container").slideUp(400);
+        });
+      });
+
+      
+    </script><h1 xmlns:dbx="http://docblox-project.org/xsl/functions" class="file">tasks/ext/PearPackage2Task.php</h1>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" id="file-nav-box">
+<div id="file-nav-options">
+              Show:
+              <img src="images/icons/visibility_public.png" id="show-public"><img src="images/icons/visibility_protected.png" id="show-protected"><img src="images/icons/visibility_private.png" id="show-private"><span class="attribute" id="show-inherited">inherited</span>
+</div>
+<div id="file-nav-container">
+<ul id="file-nav"><li>
+<a href="#classes"><img src="images/icons/class.png" height="14">
+                          Classes
+                      </a><ul><li><a href="#%5CPearPackage2Task">\PearPackage2Task</a></li></ul>
+</li></ul>
+<div style="clear: left;"></div>
+</div>
+<div id="file-nav-tab">
+              Table of Contents
+          </div>
+</div>
+<a xmlns:dbx="http://docblox-project.org/xsl/functions" name="top" class="anchor"></a><div id="file-description">
+<p xmlns:dbx="http://docblox-project.org/xsl/functions" class="short-description">A task to create a PEAR package.xml version 2.0 file.</p>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="long-description"><p>This class uses the PEAR_PackageFileManager2 class to perform the work.</p>
+
+<p>This class is designed to be very flexible -- i.e. account for changes to the package.xml w/o
+requiring changes to this class.  We've accomplished this by having generic <option> and <mapping>
+nested elements.  All options are set using PEAR_PackageFileManager2::setOptions().</p>
+
+<p>The <option> tag is used to set a simple option value.</p>
+
+<pre><code><option name="option_name" value="option_value"/>
+or <option name="option_name">option_value</option>
+</code></pre>
+
+<p>The <mapping> tag represents a complex data type.  You can use nested <element> (and nested <element> with
+<element> tags) to represent the full complexity of the structure.  Bear in mind that what you are creating
+will be mapped to an associative array that will be passed in via PEAR_PackageFileManager2::setOptions().</p>
+
+<pre><code><mapping name="option_name">
+ <element key="key_name" value="key_val"/>
+ <element key="key_name" value="key_val"/>
+</mapping>
+</code></pre>
+
+<p>Here's an over-simple example of how this could be used:</p>
+
+<pre><code><pearpkg2 name="phing" dir="${build.src.dir}">
+ <fileset dir="src">
+     <include name="**"/>
+ </fileset>
+ <option name="outputdirectory" value="./build"/>
+ <option name="packagefile" value="package2.xml"/>
+ <option name="packagedirectory" value="./${build.dist.dir}"/>
+ <option name="baseinstalldir" value="${pkg.prefix}"/>
+ <option name="channel" value="my.pear-channel.com"/>
+ <option name="summary" value="${pkg.summary}"/>
+ <option name="description" value="${pkg.description}"/>
+ <option name="apiversion" value="${pkg.version}"/>
+ <option name="apistability" value="beta"/>
+ <option name="releaseversion" value="${pkg.version}"/>
+ <option name="releasestability" value="beta"/>
+ <option name="license" value="none"/>
+ <option name="phpdep" value="5.0.0"/>
+ <option name="pearinstallerdep" value="1.4.6"/>
+ <option name="packagetype" value="php"/>
+ <option name="notes" value="${pkg.relnotes}"/>
+ <mapping name="maintainers">
+  <element>
+   <element key="handle" value="hlellelid"/>
+   <element key="name" value="Hans"/>
+   <element key="email" value="hans@xmpl.org"/>
+   <element key="role" value="lead"/>
+   <element key="active" value="yes"/>
+  </element>
+ </mapping>
+</pearpkg2>
+</code></pre>
+
+<p>Look at the build.xml in the Phing base directory (assuming you have the full distro / CVS version of Phing) to
+see a more complete example of how to call this script.</p></div>
+</div>
+<dl class="file-info">
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Author</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="mailto:stuart.binge@complinet.com">Stuart Binge</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Author</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">
+<a href="mailto:hans@xmpl.org">Hans Lellelid</a>
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Package</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">phing.tasks.ext
+         
+    </dd>
+<dt xmlns:dbx="http://docblox-project.org/xsl/functions">Version</dt>
+<dd xmlns:dbx="http://docblox-project.org/xsl/functions">$Id: 1b20dbb6595bd4c41d1e5f1430900e3bf95de411 $
+         
+    </dd>
+</dl>
+<a name="classes" class="anchor"></a><a xmlns:dbx="http://docblox-project.org/xsl/functions" id="\PearPackage2Task" class="anchor"></a><h2 xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">\PearPackage2Task<div class="to-top"><a href="#top">jump to top</a></div>
+</h2>
+<div xmlns:dbx="http://docblox-project.org/xsl/functions" class="class">
+<small class="package"><b>Package: </b>phing\tasks\ext</small><p class="short-description">A task to create a PEAR package.xml version 2.0 file.</p>
+<div class="long-description"><p>This class uses the PEAR_PackageFileManager2 class to perform the work.</p>
+
+<p>This class is designed to be very flexible -- i.e. account for changes to the package.xml w/o
+requiring changes to this class.  We've accomplished this by having generic <option> and <mapping>
+nested elements.  All options are set using PEAR_PackageFileManager2::setOptions().</p>
+
+<p>The <option> tag is used to set a simple option value.</p>
+
+<pre><code><option name="option_name" value="option_value"/>
+or <option name="option_name">option_value</option>
+</code></pre>
+
+<p>The <mapping> tag represents a complex data type.  You can use nested <element> (and nested <element> with
+<element> tags) to represent the full complexity of the structure.  Bear in mind that what you are creating
+will be mapped to an associative array that will be passed in via PEAR_PackageFileManager2::setOptions().</p>
+
+<pre><code><mapping name="option_name">
+ <element key="key_name" value="key_val"/>
+ <element key="key_name" value="key_val"/>
+</mapping>
+</code></pre>
+
+<p>Here's an over-simple example of how this could be used:</p>
+
+<pre><code><pearpkg2 name="phing" dir="${build.src.dir}">
+ <fileset dir="src">
+     <include name="**"/>
+ </fileset>
+ <option name="outputdirectory" value="./build"/>
+ <option name="packagefile" value="package2.xml"/>
+ <option name="packagedirectory" value="./${build.dist.dir}"/>
+ <option name="baseinstalldir" value="${pkg.prefix}"/>
+ <option name="channel" value="my.pear-channel.com"/>
+ <option name="summary" value="${pkg.summary}"/>
+ <option name="description" value="${pkg.description}"/>
+ <option name="apiversion" value="${pkg.version}"/>
+ <option name="apistability" value="beta"/>
+ <option name="releaseversion" value="${pkg.version}"/>
+ <option name="releasestability" value="beta"/>
+ <option name="license" value="none"/>
+ <option name="phpdep" value="5.0.0"/>
+ <option name="pearinstallerdep" value="1.4.6"/>
+ <option name="packagetype" value="php"/>
+ <option name="notes" value="${pkg.relnotes}"/>
+ <mapping name="maintainers">
+  <element>
+   <element key="handle" value="hlellelid"/>
+   <element key="name" value="Hans"/>
+   <element key="email" value="hans@xmpl.org"/>
+   <element key="role" value="lead"/>
+   <element key="active" value="yes"/>
+  </element>
+ </mapping>
+</pearpkg2>
+</code></pre>
+
+<p>Look at the build.xml in the Phing base directory (assuming you have the full distro / CVS version of Phing) to
+see a more complete example of how to call this script.</p></div>
+<dl class="class-info">
+<dt>Parent(s)</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask">\PearPackageTask</a>
+            &lt;
+            <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask" style="color: gray; font-size: 0.8em
+                ">\MatchingTask</a>
+            &lt;
+            <a href="db_types_selectors_SelectorContainer.html#%5CSelectorContainer" style="color: gray; font-size: 0.8em
+                ">\SelectorContainer</a>
+            &lt;
+            <a href="db_ProjectComponent.html#%5CProjectComponent" style="color: gray; font-size: 0.8em
+                ">\ProjectComponent</a>
+</dd>
+<dt>Author</dt>
+<dd>
+<a href="mailto:stuart.binge@complinet.com">Stuart Binge</a>
+         
+    </dd>
+<dt>Author</dt>
+<dd>
+<a href="mailto:hans@xmpl.org">Hans Lellelid</a>
+         
+    </dd>
+<dt>Copyright</dt>
+<dd>2001,2002 THYRELL. All rights reserved
+         
+    </dd>
+<dt>Version</dt>
+<dd>$Id: 1b20dbb6595bd4c41d1e5f1430900e3bf95de411 $
+         
+    </dd>
+</dl>
+<h3>Properties</h3>
+<div>
+<a id="\PearPackage2Task::$description" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">string
+                 <span class="highlight">$description</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Description of the task</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24description">\Task::$$description</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24description">\MatchingTask::$$description</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24description">\PearPackageTask::$$description</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24description">\Task::$$description</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24description">\MatchingTask::$$description</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24description">\PearPackageTask::$$description</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$dir" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">
+                 <span class="highlight">$dir</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Base directory for reading files.</p>
+<small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24dir">\PearPackageTask::$$dir</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>n/a</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24dir">\PearPackageTask::$$dir</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$fileset" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\FileSet
+                 <span class="highlight">$fileset</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description"></p><small>Inherited from:
+                        <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24fileset">\MatchingTask::$$fileset</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24fileset">\PearPackageTask::$$fileset</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_types_FileSet.html#%5CFileSet">\FileSet</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24fileset">\MatchingTask::$$fileset</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24fileset">\PearPackageTask::$$fileset</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$filesets" class="anchor"></a><div class="property private inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">array
+                 <span class="highlight">$filesets</span>= 'array()'
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description"></p>FileSet[]<small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24filesets">\PearPackageTask::$$filesets</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>array()</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>array</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24filesets">\PearPackageTask::$$filesets</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$location" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\Location
+                 <span class="highlight">$location</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Stored buildfile location</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24location">\Task::$$location</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24location">\MatchingTask::$$location</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24location">\PearPackageTask::$$location</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_parser_Location.html#%5CLocation">\Location</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24location">\Task::$$location</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24location">\MatchingTask::$$location</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24location">\PearPackageTask::$$location</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$mappings" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">
+                 <span class="highlight">$mappings</span>= 'array()'
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Nested &lt;mapping&gt; (complex options) types.</p>
+<small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24mappings">\PearPackageTask::$$mappings</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>array()</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>n/a</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24mappings">\PearPackageTask::$$mappings</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$options" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">array
+                 <span class="highlight">$options</span>= 'array()'
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description"></p>PearPkgOption[]<small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24options">\PearPackageTask::$$options</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>array()</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>array</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24options">\PearPackageTask::$$options</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$package" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">
+                 <span class="highlight">$package</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description"></p>
+<small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24package">\PearPackageTask::$$package</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>n/a</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24package">\PearPackageTask::$$package</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$packageFile" class="anchor"></a><div class="property private inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">
+                 <span class="highlight">$packageFile</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Package file</p>
+<small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24packageFile">\PearPackageTask::$$packageFile</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>n/a</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24packageFile">\PearPackageTask::$$packageFile</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$pkg" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\PEAR_PackageFileManager
+                 <span class="highlight">$pkg</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description"></p><small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24pkg">\PearPackageTask::$$pkg</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>\PEAR_PackageFileManager</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24pkg">\PearPackageTask::$$pkg</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$preparedOptions" class="anchor"></a><div class="property private inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private">
+                 <span class="highlight">$preparedOptions</span>= 'array()'
+                </code><div class="description">
+<span class="attribute">inherited</span><small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24preparedOptions">\PearPackageTask::$$preparedOptions</a></small>
+</div>
+<div class="code-tabs">
+<strong>Default value</strong><code>array()</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>n/a</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24preparedOptions">\PearPackageTask::$$preparedOptions</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$project" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\Project
+                 <span class="highlight">$project</span>= 'null'
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Holds a reference to the project that a project component
+(a task, a target, etc.) belongs to</p>A reference to the current project instance<small>Inherited from:
+                        <a href="db_ProjectComponent.html#%5CProjectComponent::%24%24project">\ProjectComponent::$$project</a><a href="db_Task.html#%5CTask::%24%24project">\Task::$$project</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24project">\MatchingTask::$$project</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24project">\PearPackageTask::$$project</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>null</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_Project.html#%5CProject">\Project</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_ProjectComponent.html#%5CProjectComponent::%24%24project">\ProjectComponent::$$project</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24project">\Task::$$project</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24project">\MatchingTask::$$project</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24project">\PearPackageTask::$$project</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$roles" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\PearPkgRole[]
+                 <span class="highlight">$roles</span>= 'array()'
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Nested &lt;role&gt; elements</p><small>Inherited from:
+                        <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24roles">\PearPackageTask::$$roles</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>array()</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_tasks_ext_PearPackageTask.html#%5CPearPkgRole">\PearPkgRole[]</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24roles">\PearPackageTask::$$roles</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$target" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\Target
+                 <span class="highlight">$target</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Owning Target object</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24target">\Task::$$target</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24target">\MatchingTask::$$target</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24target">\PearPackageTask::$$target</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_Target.html#%5CTarget">\Target</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24target">\Task::$$target</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24target">\MatchingTask::$$target</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24target">\PearPackageTask::$$target</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$taskName" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">string
+                 <span class="highlight">$taskName</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Taskname for logger</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24taskName">\Task::$$taskName</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24taskName">\MatchingTask::$$taskName</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24taskName">\PearPackageTask::$$taskName</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24taskName">\Task::$$taskName</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24taskName">\MatchingTask::$$taskName</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24taskName">\PearPackageTask::$$taskName</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$taskType" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">string
+                 <span class="highlight">$taskType</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Internal taskname (req)</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24taskType">\Task::$$taskType</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24taskType">\MatchingTask::$$taskType</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24taskType">\PearPackageTask::$$taskType</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>string</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24taskType">\Task::$$taskType</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24taskType">\MatchingTask::$$taskType</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24taskType">\PearPackageTask::$$taskType</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$useDefaultExcludes" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">boolean
+                 <span class="highlight">$useDefaultExcludes</span>= 'true'
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description"></p><small>Inherited from:
+                        <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24useDefaultExcludes">\MatchingTask::$$useDefaultExcludes</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24useDefaultExcludes">\PearPackageTask::$$useDefaultExcludes</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Default value</strong><code>true</code><strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd>boolean</dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24useDefaultExcludes">\MatchingTask::$$useDefaultExcludes</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24useDefaultExcludes">\PearPackageTask::$$useDefaultExcludes</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::$wrapper" class="anchor"></a><div class="property protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/property.png" alt="Property"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected">\RuntimeConfigurable
+                 <span class="highlight">$wrapper</span>= ''
+                </code><div class="description">
+<span class="attribute">inherited</span><p class="short-description">Wrapper of the task</p><small>Inherited from:
+                        <a href="db_Task.html#%5CTask::%24%24wrapper">\Task::$$wrapper</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24wrapper">\MatchingTask::$$wrapper</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24wrapper">\PearPackageTask::$$wrapper</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Details</strong><dl class="property-info">
+<dt>Type</dt>
+<dd><a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_Task.html#%5CTask::%24%24wrapper">\Task::$$wrapper</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::%24%24wrapper">\MatchingTask::$$wrapper</a>
+         
+    </dd>
+<dt>Inherited_from</dt>
+<dd>
+<a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::%24%24wrapper">\PearPackageTask::$$wrapper</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+<h3>Methods</h3>
+<div>
+<a id="\PearPackage2Task::__construct()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">__construct</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Create instance; set fileset to new FileSet.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::__construct()">\MatchingTask::__construct()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::__construct()">\PearPackageTask::__construct()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::addFileSet()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">addFileSet</span><span class="nb-faded-text">(
+           $fs
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Nested creator, creates a FileSet for this task</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::addFileSet()">\PearPackageTask::addFileSet()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$fs</th>
+<td></td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::appendSelector()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">appendSelector</span><span class="nb-faded-text">(
+          <a href="db_types_selectors_FileSelector.html#%5CFileSelector">\FileSelector</a> $selector
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Add a new selector into this container.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::appendSelector()">\MatchingTask::appendSelector()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::appendSelector()">\PearPackageTask::appendSelector()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$selector</th>
+<td><a href="db_types_selectors_FileSelector.html#%5CFileSelector">\FileSelector</a></td>
+<td><em><p>the new selector to add</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createAnd()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createAnd</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_AndSelector.html#%5CAndSelector">\AndSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add an "And" selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createAnd()">\MatchingTask::createAnd()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createAnd()">\PearPackageTask::createAnd()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_AndSelector.html#%5CAndSelector">\AndSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createContains()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createContains</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_ContainsSelector.html#%5CContainsSelector">\ContainsSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a contains selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createContains()">\MatchingTask::createContains()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createContains()">\PearPackageTask::createContains()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_ContainsSelector.html#%5CContainsSelector">\ContainsSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createCustom()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createCustom</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_ExtendSelector.html#%5CExtendSelector">\ExtendSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add an extended selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createCustom()">\MatchingTask::createCustom()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createCustom()">\PearPackageTask::createCustom()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_ExtendSelector.html#%5CExtendSelector">\ExtendSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createDate()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createDate</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_DateSelector.html#%5CDateSelector">\DateSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a selector date entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createDate()">\MatchingTask::createDate()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createDate()">\PearPackageTask::createDate()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_DateSelector.html#%5CDateSelector">\DateSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createDepend()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createDepend</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_DependSelector.html#%5CDependSelector">\DependSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a depends selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createDepend()">\MatchingTask::createDepend()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createDepend()">\PearPackageTask::createDepend()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_DependSelector.html#%5CDependSelector">\DependSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createDepth()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createDepth</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_DepthSelector.html#%5CDepthSelector">\DepthSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a depth selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createDepth()">\MatchingTask::createDepth()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createDepth()">\PearPackageTask::createDepth()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_DepthSelector.html#%5CDepthSelector">\DepthSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createExclude()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createExclude</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a name entry on the exclude list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createExclude()">\MatchingTask::createExclude()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createExclude()">\PearPackageTask::createExclude()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createExcludesFile()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createExcludesFile</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a name entry on the include files list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createExcludesFile()">\MatchingTask::createExcludesFile()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createExcludesFile()">\PearPackageTask::createExcludesFile()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createFilename()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createFilename</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_FilenameSelector.html#%5CFilenameSelector">\FilenameSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a selector filename entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createFilename()">\MatchingTask::createFilename()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createFilename()">\PearPackageTask::createFilename()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_FilenameSelector.html#%5CFilenameSelector">\FilenameSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createInclude()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createInclude</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a name entry on the include list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createInclude()">\MatchingTask::createInclude()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createInclude()">\PearPackageTask::createInclude()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createIncludesFile()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createIncludesFile</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a name entry on the include files list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createIncludesFile()">\MatchingTask::createIncludesFile()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createIncludesFile()">\PearPackageTask::createIncludesFile()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_PatternSet.html#%5CPatternSetNameEntry">\PatternSetNameEntry</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createMajority()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createMajority</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_MajoritySelector.html#%5CMajoritySelector">\MajoritySelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a majority selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createMajority()">\MatchingTask::createMajority()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createMajority()">\PearPackageTask::createMajority()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_MajoritySelector.html#%5CMajoritySelector">\MajoritySelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createMapping()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createMapping</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Handles nested generic <option> elements.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createMapping()">\PearPackageTask::createMapping()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createNone()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createNone</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_NoneSelector.html#%5CNoneSelector">\NoneSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a "None" selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createNone()">\MatchingTask::createNone()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createNone()">\PearPackageTask::createNone()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_NoneSelector.html#%5CNoneSelector">\NoneSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createNot()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createNot</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_NotSelector.html#%5CNotSelector">\NotSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a "Not" selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createNot()">\MatchingTask::createNot()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createNot()">\PearPackageTask::createNot()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_NotSelector.html#%5CNotSelector">\NotSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createOption()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createOption</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Handles nested generic <option> elements.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createOption()">\PearPackageTask::createOption()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createOr()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createOr</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add an "Or" selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createOr()">\MatchingTask::createOr()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createOr()">\PearPackageTask::createOr()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createPatternSet()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createPatternSet</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_PatternSet.html#%5CPatternSet">\PatternSet</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a set of patterns</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createPatternSet()">\MatchingTask::createPatternSet()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createPatternSet()">\PearPackageTask::createPatternSet()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_PatternSet.html#%5CPatternSet">\PatternSet</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createPresent()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createPresent</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_PresentSelector.html#%5CPresentSelector">\PresentSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a present selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createPresent()">\MatchingTask::createPresent()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createPresent()">\PearPackageTask::createPresent()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_PresentSelector.html#%5CPresentSelector">\PresentSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createRole()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createRole</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_tasks_ext_PearPackageTask.html#%5CPearPkgRole">\PearPkgRole</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Handles nested <role> elements</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createRole()">\PearPackageTask::createRole()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_tasks_ext_PearPackageTask.html#%5CPearPkgRole">\PearPkgRole</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createSelector()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createSelector</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_SelectSelector.html#%5CSelectSelector">\SelectSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a "Select" selector entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createSelector()">\MatchingTask::createSelector()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createSelector()">\PearPackageTask::createSelector()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_SelectSelector.html#%5CSelectSelector">\SelectSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::createSize()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">createSize</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_selectors_SizeSelector.html#%5CSizeSelector">\SizeSelector</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">add a selector size entry on the selector list</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::createSize()">\MatchingTask::createSize()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::createSize()">\PearPackageTask::createSize()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_selectors_SizeSelector.html#%5CSizeSelector">\SizeSelector</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::fixDeps()" class="anchor"></a><div class="method private inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private"><span class="highlight">fixDeps</span><span class="nb-faded-text">(
+           $deps
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Fixes the boolean in optional dependencies</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::fixDeps()">\PearPackageTask::fixDeps()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$deps</th>
+<td></td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getDescription()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getDescription</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the textual description of the task</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getDescription()">\Task::getDescription()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getDescription()">\MatchingTask::getDescription()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getDescription()">\PearPackageTask::getDescription()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>The text description of the task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getDirectoryScanner()" class="anchor"></a><div class="method protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">getDirectoryScanner</span><span class="nb-faded-text">(
+           $baseDir
+          )
+        </span>
+        :
+          <a href="db_util_DirectoryScanner.html#%5CDirectoryScanner">\DirectoryScanner</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the directory scanner needed to access the files to process.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getDirectoryScanner()">\MatchingTask::getDirectoryScanner()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getDirectoryScanner()">\PearPackageTask::getDirectoryScanner()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$baseDir</th>
+<td></td>
+<td><em></em></td>
+</tr>
+</table>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_util_DirectoryScanner.html#%5CDirectoryScanner">\DirectoryScanner</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getFileSets()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getFileSets</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          array</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Used by the PEAR_PackageFileManager_PhingFileSet lister.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getFileSets()">\PearPackageTask::getFileSets()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>array</td>
+<td>FileSet[]</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getImplicitFileSet()" class="anchor"></a><div class="method protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">getImplicitFileSet</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_types_FileSet.html#%5CFileSet">\FileSet</a></code><div class="description">
+<span class="attribute">final</span><span class="attribute">inherited</span><p class="short_description">Accessor for the implict fileset.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getImplicitFileSet()">\MatchingTask::getImplicitFileSet()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getImplicitFileSet()">\PearPackageTask::getImplicitFileSet()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_types_FileSet.html#%5CFileSet">\FileSet</a></td>
+<td></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getLocation()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getLocation</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_parser_Location.html#%5CLocation">\Location</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the location within the buildfile this task occurs. Used
+by {@link BuildException} to give detailed error messages.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getLocation()">\Task::getLocation()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getLocation()">\MatchingTask::getLocation()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getLocation()">\PearPackageTask::getLocation()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_parser_Location.html#%5CLocation">\Location</a></td>
+<td>The location object describing the position of this task within the buildfile.</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getOwningTarget()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getOwningTarget</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_Target.html#%5CTarget">\Target</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the owning target of this task.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getOwningTarget()">\Task::getOwningTarget()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getOwningTarget()">\MatchingTask::getOwningTarget()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getOwningTarget()">\PearPackageTask::getOwningTarget()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_Target.html#%5CTarget">\Target</a></td>
+<td>The target object that owns this task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getProject()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getProject</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_Project.html#%5CProject">\Project</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns a reference to current project</p>
+<small>Inherited from:
+                    <a href="db_ProjectComponent.html#%5CProjectComponent::getProject()">\ProjectComponent::getProject()</a><a href="db_Task.html#%5CTask::getProject()">\Task::getProject()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getProject()">\MatchingTask::getProject()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getProject()">\PearPackageTask::getProject()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_Project.html#%5CProject">\Project</a></td>
+<td>Reference to current porject object</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getRegisterSlot()" class="anchor"></a><div class="method protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">getRegisterSlot</span><span class="nb-faded-text">(
+          string $slotName
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns a name</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getRegisterSlot()">\Task::getRegisterSlot()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getRegisterSlot()">\MatchingTask::getRegisterSlot()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getRegisterSlot()">\PearPackageTask::getRegisterSlot()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$slotName</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getRuntimeConfigurableWrapper()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getRuntimeConfigurableWrapper</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          <a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the wrapper object for runtime configuration</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getRuntimeConfigurableWrapper()">\Task::getRuntimeConfigurableWrapper()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getRuntimeConfigurableWrapper()">\MatchingTask::getRuntimeConfigurableWrapper()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getRuntimeConfigurableWrapper()">\PearPackageTask::getRuntimeConfigurableWrapper()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></td>
+<td>The wrapper object used by this task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getSelectors()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getSelectors</span><span class="nb-faded-text">(
+           $p
+          )
+        </span>
+        :
+          array</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the set of selectors as an array.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getSelectors()">\MatchingTask::getSelectors()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getSelectors()">\PearPackageTask::getSelectors()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$p</th>
+<td></td>
+<td><em></em></td>
+</tr>
+</table>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>array</td>
+<td>FileSelector[] An array of selectors in this container</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getTaskName()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getTaskName</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the name of task, used only for log messages</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getTaskName()">\Task::getTaskName()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getTaskName()">\MatchingTask::getTaskName()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getTaskName()">\PearPackageTask::getTaskName()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>Name of this task</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::getTaskType()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">getTaskType</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns the name of the task under which it was invoked,
+usually the XML tagname</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::getTaskType()">\Task::getTaskType()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::getTaskType()">\MatchingTask::getTaskType()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::getTaskType()">\PearPackageTask::getTaskType()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>The type of this task (XML Tag)</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::hasSelectors()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">hasSelectors</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          boolean</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Indicates whether there are any selectors here.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::hasSelectors()">\MatchingTask::hasSelectors()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::hasSelectors()">\PearPackageTask::hasSelectors()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>boolean</td>
+<td>Whether any selectors are in this container</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::init()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">init</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Called by the parser to let the task initialize properly.</p></div>
+<div class="code-tabs">
+<div class="long-description"><p>Should throw a BuildException if something goes wrong with the build</p>
+
+<p>This is abstract here, but may not be overloaded by subclasses.</p></div>
+<strong>Throws</strong><table class="argument-info">
+<thead><tr>
+<th>Exception</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td><a href="db_BuildException.html#%5CBuildException">\BuildException</a></td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::log()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">log</span><span class="nb-faded-text">(
+          string $msg, integer $level
+              =
+              Project::MSG_INFO
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Provides a project level log event to the task.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::log()">\Task::log()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::log()">\MatchingTask::log()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::log()">\PearPackageTask::log()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$msg</th>
+<td>string</td>
+<td><em><p>The message to log</p></em></td>
+</tr>
+<tr>
+<th>$level</th>
+<td>integer</td>
+<td><em><p>The priority of the message</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>See</dt>
+<dd>
+<a href="db_BuildEvent.html#%5CBuildEvent">\BuildEvent</a>
+         
+    </dd>
+<dt>See</dt>
+<dd>
+<a href="db_BuildListener.html#%5CBuildListener">\BuildListener</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::main()" class="anchor"></a><div class="method public">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">main</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description">Main entry point.</p></div>
+<div class="code-tabs"><div class="long-description"><p>Should throw a BuildException if someting goes wrong with the build</p>
+
+<p>This is abstract here. Must be overloaded by real tasks.</p></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::maybeConfigure()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">maybeConfigure</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Configure this task if it hasn't been done already.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::maybeConfigure()">\Task::maybeConfigure()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::maybeConfigure()">\MatchingTask::maybeConfigure()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::maybeConfigure()">\PearPackageTask::maybeConfigure()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::perform()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">perform</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Perfrom this task</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::perform()">\Task::perform()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::perform()">\MatchingTask::perform()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::perform()">\PearPackageTask::perform()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::populateOptions()" class="anchor"></a><div class="method private inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_private.png" style="margin-right: 5px" alt="private"><span class="highlight">populateOptions</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Adds the options that are set via attributes and the nested tags to the options array.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::populateOptions()">\PearPackageTask::populateOptions()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::selectorCount()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">selectorCount</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          int</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Gives the count of the number of selectors in this container</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::selectorCount()">\MatchingTask::selectorCount()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::selectorCount()">\PearPackageTask::selectorCount()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>int</td>
+<td>The number of selectors in this container</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::selectorElements()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">selectorElements</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          \an</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Returns an enumerator for accessing the set of selectors.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::selectorElements()">\MatchingTask::selectorElements()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::selectorElements()">\PearPackageTask::selectorElements()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>\an</td>
+<td>enumerator that goes through each of the selectors</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setCaseSensitive()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setCaseSensitive</span><span class="nb-faded-text">(
+          boolean $isCaseSensitive
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets case sensitivity of the file system</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setCaseSensitive()">\MatchingTask::setCaseSensitive()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setCaseSensitive()">\PearPackageTask::setCaseSensitive()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$isCaseSensitive</th>
+<td>boolean</td>
+<td><em><p>"true"|"on"|"yes" if file system is case sensitive, "false"|"off"|"no" when not.</p>
+</em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setDefaultexcludes()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDefaultexcludes</span><span class="nb-faded-text">(
+          boolean $useDefaultExcludes
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets whether default exclusions should be used or not.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setDefaultexcludes()">\MatchingTask::setDefaultexcludes()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setDefaultexcludes()">\PearPackageTask::setDefaultexcludes()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$useDefaultExcludes</th>
+<td>boolean</td>
+<td><em><p>"true"|"on"|"yes" when default exclusions should be used, "false"|"off"|"no" when they shouldn't be used.</p>
+</em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setDescription()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDescription</span><span class="nb-faded-text">(
+          string $desc
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets a textual description of the task</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setDescription()">\Task::setDescription()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setDescription()">\MatchingTask::setDescription()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setDescription()">\PearPackageTask::setDescription()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$desc</th>
+<td>string</td>
+<td><em><p>The text describing the task</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setDestFile()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDestFile</span><span class="nb-faded-text">(
+           $f
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the file to use for generated package.xml</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setDestFile()">\PearPackageTask::setDestFile()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$f</th>
+<td></td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setDir()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setDir</span><span class="nb-faded-text">(
+          <a href="db_system_io_PhingFile.html#%5CPhingFile">\PhingFile</a> $f
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets "dir" property from XML.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setDir()">\PearPackageTask::setDir()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$f</th>
+<td><a href="db_system_io_PhingFile.html#%5CPhingFile">\PhingFile</a></td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setExcludes()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setExcludes</span><span class="nb-faded-text">(
+          string $excludes
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the set of exclude patterns. Patterns may be separated by a comma
+or a space.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setExcludes()">\MatchingTask::setExcludes()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setExcludes()">\PearPackageTask::setExcludes()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$excludes</th>
+<td>string</td>
+<td><em><p>the string containing the exclude patterns</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setExcludesfile()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setExcludesfile</span><span class="nb-faded-text">(
+          <a href="db_system_io_PhingFile.html#%5CPhingFile">\PhingFile</a> $excludesfile
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the name of the file containing the includes patterns.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setExcludesfile()">\MatchingTask::setExcludesfile()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setExcludesfile()">\PearPackageTask::setExcludesfile()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$excludesfile</th>
+<td><a href="db_system_io_PhingFile.html#%5CPhingFile">\PhingFile</a></td>
+<td><em><p>A string containing the filename to fetch the include patterns from.</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setFollowSymlinks()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setFollowSymlinks</span><span class="nb-faded-text">(
+          boolean $followSymlinks
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets whether or not symbolic links should be followed.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setFollowSymlinks()">\MatchingTask::setFollowSymlinks()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setFollowSymlinks()">\PearPackageTask::setFollowSymlinks()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$followSymlinks</th>
+<td>boolean</td>
+<td><em><p>whether or not symbolic links should be followed</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setIncludes()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setIncludes</span><span class="nb-faded-text">(
+          string $includes
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the set of include patterns. Patterns may be separated by a comma
+or a space.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setIncludes()">\MatchingTask::setIncludes()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setIncludes()">\PearPackageTask::setIncludes()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$includes</th>
+<td>string</td>
+<td><em><p>the string containing the include patterns</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setIncludesfile()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setIncludesfile</span><span class="nb-faded-text">(
+          <a href="db_system_io_PhingFile.html#%5CPhingFile">\PhingFile</a> $includesfile
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the name of the file containing the includes patterns.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setIncludesfile()">\MatchingTask::setIncludesfile()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setIncludesfile()">\PearPackageTask::setIncludesfile()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$includesfile</th>
+<td><a href="db_system_io_PhingFile.html#%5CPhingFile">\PhingFile</a></td>
+<td><em><p>A string containing the filename to fetch the include patterns from.</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setLocation()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setLocation</span><span class="nb-faded-text">(
+          <a href="db_parser_Location.html#%5CLocation">\Location</a> $location
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the location within the buildfile this task occurs. Called by
+the parser to set location information.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setLocation()">\Task::setLocation()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setLocation()">\MatchingTask::setLocation()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setLocation()">\PearPackageTask::setLocation()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$location</th>
+<td><a href="db_parser_Location.html#%5CLocation">\Location</a></td>
+<td><em><p>The location object describing the position of this task within the buildfile.</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setName()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setName</span><span class="nb-faded-text">(
+          string $v
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets "name" property from XML.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setName()">\PearPackageTask::setName()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$v</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setOptions()" class="anchor"></a><div class="method protected inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">setOptions</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets PEAR package.xml options, based on class properties.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setOptions()">\PearPackageTask::setOptions()</a></small>
+</div>
+<div class="code-tabs"><div class="long-description"></div></div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setOwningTarget()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setOwningTarget</span><span class="nb-faded-text">(
+          <a href="db_Target.html#%5CTarget">\Target</a> $target
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the owning target this task belongs to.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setOwningTarget()">\Task::setOwningTarget()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setOwningTarget()">\MatchingTask::setOwningTarget()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setOwningTarget()">\PearPackageTask::setOwningTarget()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$target</th>
+<td><a href="db_Target.html#%5CTarget">\Target</a></td>
+<td><em><p>Reference to owning target</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setPackage()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setPackage</span><span class="nb-faded-text">(
+          string $v
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Set "package" property from XML.</p>
+<small>Inherited from:
+                    <a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setPackage()">\PearPackageTask::setPackage()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$v</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>See</dt>
+<dd>\setName()
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setProject()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setProject</span><span class="nb-faded-text">(
+          <a href="db_Project.html#%5CProject">\Project</a> $project
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">References the project to the current component.</p>
+<small>Inherited from:
+                    <a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setProject()">\MatchingTask::setProject()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setProject()">\PearPackageTask::setProject()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$project</th>
+<td><a href="db_Project.html#%5CProject">\Project</a></td>
+<td><em><p>The reference to the current project</p></em></td>
+</tr>
+</table>
+<strong>Details</strong><dl class="function-info">
+<dt>See</dt>
+<dd>
+<a href="db_ProjectComponent.html#%5CProjectComponent::setProject()">\ProjectComponent::setProject()</a>
+         
+    </dd>
+</dl>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setRuntimeConfigurableWrapper()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setRuntimeConfigurableWrapper</span><span class="nb-faded-text">(
+          <a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a> $wrapper
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the wrapper object this task should use for runtime
+ configurable elements.</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setRuntimeConfigurableWrapper()">\Task::setRuntimeConfigurableWrapper()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setRuntimeConfigurableWrapper()">\MatchingTask::setRuntimeConfigurableWrapper()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setRuntimeConfigurableWrapper()">\PearPackageTask::setRuntimeConfigurableWrapper()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$wrapper</th>
+<td><a href="db_RuntimeConfigurable.html#%5CRuntimeConfigurable">\RuntimeConfigurable</a></td>
+<td><em><p>The wrapper object this task should use</p></em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setTaskName()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTaskName</span><span class="nb-faded-text">(
+          string $name
+          )
+        </span>
+        :
+          string</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the name of this task for log messages</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setTaskName()">\Task::setTaskName()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setTaskName()">\MatchingTask::setTaskName()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setTaskName()">\PearPackageTask::setTaskName()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$name</th>
+<td>string</td>
+<td><em></em></td>
+</tr>
+</table>
+<strong>Returns</strong><table class="argument-info">
+<thead><tr>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<td>string</td>
+<td>A string representing the name of this task for log</td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setTaskType()" class="anchor"></a><div class="method public inherited_from ">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_public.png" style="margin-right: 5px" alt="public"><span class="highlight">setTaskType</span><span class="nb-faded-text">(
+          string $name
+          )
+        </span>
+        :
+          void</code><div class="description">
+<span class="attribute">inherited</span><p class="short_description">Sets the type of the task. Usually this is the name of the XML tag</p>
+<small>Inherited from:
+                    <a href="db_Task.html#%5CTask::setTaskType()">\Task::setTaskType()</a><a href="db_tasks_system_MatchingTask.html#%5CMatchingTask::setTaskType()">\MatchingTask::setTaskType()</a><a href="db_tasks_ext_PearPackageTask.html#%5CPearPackageTask::setTaskType()">\PearPackageTask::setTaskType()</a></small>
+</div>
+<div class="code-tabs">
+<div class="long-description"></div>
+<strong>Parameters</strong><table class="argument-info">
+<thead><tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr></thead>
+<tr>
+<th>$name</th>
+<td>string</td>
+<td><em><p>The type of this task (XML Tag)</p>
+</em></td>
+</tr>
+</table>
+</div>
+<div class="clear"></div>
+</div>
+<a id="\PearPackage2Task::setVersion2Options()" class="anchor"></a><div class="method protected">
+<a href="#" class="gripper"><img src="images/icons/arrow_right.png"><img src="images/icons/arrow_down.png" style="display: none;"></a><code><img src="images/icons/method.png" alt="method"><img src="images/icons/visibility_protected.png" style="margin-right: 5px" alt="protected"><span class="highlight">setVersion2Options</span><span class="nb-faded-text">(
+          
+          )
+        </span>
+        :
+          void</code><div class="description"><p class="short_description"></p></div>
+<div class="code-tabs"></div>
+<div class="clear"></div>
+</div>
+</div>
+</div>
+</div>
+<small xmlns="" class="footer">Documentation was generated by <a href="http://docblox-project.org">DocBlox 0.18.1</a>.
+    </small></body></html>

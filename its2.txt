@@ -1,0 +1,181 @@
+ <h2>Активность за 08-06-2012<span style="float:right"><a href="#" id="detstat" style="color:#5c5c5c;font-size:14px">детальная статистика</a></span></h2><h5  class="notloaded" id2="brand2" id="2" brandtitle="Тойота Центр Челябинск Запад" logo="img\logo-Toyota.png"><img width="30px" src="img\logo-Toyota.png" hint="Тойота Центр Челябинск Запад" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (47)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">1 (26)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">0 (3)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">1 (94)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">1 (227)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (36)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 26 / Подтвержденные: 36 / Вероятные: 48 / Маловероятные: 69" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>69</font> = 26 выд. + 10 подтв. + 12 вер. + 21 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="2"><ul class=tabsmini><li><a id2=dg href=# brand="2" class=current>Договора</a></li><li><a id2=vd href=# brand="2">Выдачи</a></li><li><a id2=out2 href=# brand="2" >Расторжения</a></li><li><a id2=out3 href=# brand="2" >Прич.растор.</a></li><li><a id2=out href=# brand="2" >OUT</a></li><li><a id2=zv href=# brand="2" >Звонки</a></li><li><a id2=vz href=# brand="2" >Визиты</a></li><li><a id2=tst href=# brand="2" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm2" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="2"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 26 / Подтвержденные: 36 / Вероятные: 48 / Маловероятные: 69</font></center></div><h5  class="notloaded" id2="brand3" id="3" brandtitle="Тойота Центр Челябинск Восток" logo="img\logo-Toyota.png"><img width="30px" src="img\logo-Toyota.png" hint="Тойота Центр Челябинск Восток" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (38)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">0 (17)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">0 (5)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">2 (64)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">0 (84)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (37)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 17 / Подтвержденные: 20 / Вероятные: 26 / Маловероятные: 48" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>48</font> = 17 выд. + 3 подтв. + 6 вер. + 22 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="3"><ul class=tabsmini><li><a id2=dg href=# brand="3" class=current>Договора</a></li><li><a id2=vd href=# brand="3">Выдачи</a></li><li><a id2=out2 href=# brand="3" >Расторжения</a></li><li><a id2=out3 href=# brand="3" >Прич.растор.</a></li><li><a id2=out href=# brand="3" >OUT</a></li><li><a id2=zv href=# brand="3" >Звонки</a></li><li><a id2=vz href=# brand="3" >Визиты</a></li><li><a id2=tst href=# brand="3" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm3" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="3"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 17 / Подтвержденные: 20 / Вероятные: 26 / Маловероятные: 48</font></center></div><h5  class="notloaded" id2="brand8" id="8" brandtitle="Шкода - Легион Моторс" logo="img\logo-Skoda.png"><img width="30px" src="img\logo-Skoda.png" hint="Шкода - Легион Моторс" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (16)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">1 (9)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">0 (3)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">0 (16)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">2 (48)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (12)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 9 / Подтвержденные: 22 / Вероятные: 25 / Маловероятные: 42" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>42</font> = 9 выд. + 13 подтв. + 3 вер. + 17 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="8"><ul class=tabsmini><li><a id2=dg href=# brand="8" class=current>Договора</a></li><li><a id2=vd href=# brand="8">Выдачи</a></li><li><a id2=out2 href=# brand="8" >Расторжения</a></li><li><a id2=out3 href=# brand="8" >Прич.растор.</a></li><li><a id2=out href=# brand="8" >OUT</a></li><li><a id2=zv href=# brand="8" >Звонки</a></li><li><a id2=vz href=# brand="8" >Визиты</a></li><li><a id2=tst href=# brand="8" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm8" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="8"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 9 / Подтвержденные: 22 / Вероятные: 25 / Маловероятные: 42</font></center></div><h5  class="notloaded" id2="brand9" id="9" brandtitle="Порше Центр Челябинск" logo="img\logo-Porsche.png"><img width="30px" src="img\logo-Porsche.png" hint="Порше Центр Челябинск" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (2)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">0 (0)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">0 (0)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">0 (6)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">0 (8)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (5)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 0 / Подтвержденные: 0 / Вероятные: 0 / Маловероятные: 0" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>0</font> = 0 выд. + 0 подтв. + 0 вер. + 0 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="9"><ul class=tabsmini><li><a id2=dg href=# brand="9" class=current>Договора</a></li><li><a id2=vd href=# brand="9">Выдачи</a></li><li><a id2=out2 href=# brand="9" >Расторжения</a></li><li><a id2=out3 href=# brand="9" >Прич.растор.</a></li><li><a id2=out href=# brand="9" >OUT</a></li><li><a id2=zv href=# brand="9" >Звонки</a></li><li><a id2=vz href=# brand="9" >Визиты</a></li><li><a id2=tst href=# brand="9" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm9" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="9"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 0 / Подтвержденные: 0 / Вероятные: 0 / Маловероятные: 0</font></center></div><h5  class="notloaded" id2="brand1" id="1" brandtitle="Пежо - Леонар Авто" logo="img\logo-Peugeot.png"><img width="30px" src="img\logo-Peugeot.png" hint="Пежо - Леонар Авто" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (16)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">0 (3)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">2 (4)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">0 (57)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">0 (60)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (20)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 3 / Подтвержденные: 11 / Вероятные: 13 / Маловероятные: 16" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>16</font> = 3 выд. + 8 подтв. + 2 вер. + 3 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="1"><ul class=tabsmini><li><a id2=dg href=# brand="1" class=current>Договора</a></li><li><a id2=vd href=# brand="1">Выдачи</a></li><li><a id2=out2 href=# brand="1" >Расторжения</a></li><li><a id2=out3 href=# brand="1" >Прич.растор.</a></li><li><a id2=out href=# brand="1" >OUT</a></li><li><a id2=zv href=# brand="1" >Звонки</a></li><li><a id2=vz href=# brand="1" >Визиты</a></li><li><a id2=tst href=# brand="1" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm1" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="1"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 3 / Подтвержденные: 11 / Вероятные: 13 / Маловероятные: 16</font></center></div><h5  class="notloaded" id2="brand6" id="6" brandtitle="Мицубиши Центр Челябинск Запад" logo="img\logo-Mitsubishi.png"><img width="30px" src="img\logo-Mitsubishi.png" hint="Мицубиши Центр Челябинск Запад" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (10)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">0 (4)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">0 (3)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">0 (17)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">0 (47)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (19)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 4 / Подтвержденные: 4 / Вероятные: 4 / Маловероятные: 23" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>23</font> = 4 выд. + 0 подтв. + 0 вер. + 19 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="6"><ul class=tabsmini><li><a id2=dg href=# brand="6" class=current>Договора</a></li><li><a id2=vd href=# brand="6">Выдачи</a></li><li><a id2=out2 href=# brand="6" >Расторжения</a></li><li><a id2=out3 href=# brand="6" >Прич.растор.</a></li><li><a id2=out href=# brand="6" >OUT</a></li><li><a id2=zv href=# brand="6" >Звонки</a></li><li><a id2=vz href=# brand="6" >Визиты</a></li><li><a id2=tst href=# brand="6" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm6" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="6"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 4 / Подтвержденные: 4 / Вероятные: 4 / Маловероятные: 23</font></center></div><h5  class="notloaded" id2="brand7" id="7" brandtitle="Мицубиши Центр Челябинск Восток" logo="img\logo-Mitsubishi.png"><img width="30px" src="img\logo-Mitsubishi.png" hint="Мицубиши Центр Челябинск Восток" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (9)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">0 (3)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">0 (2)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">3 (26)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">0 (33)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (13)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 3 / Подтвержденные: 3 / Вероятные: 3 / Маловероятные: 22" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>22</font> = 3 выд. + 0 подтв. + 0 вер. + 19 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="7"><ul class=tabsmini><li><a id2=dg href=# brand="7" class=current>Договора</a></li><li><a id2=vd href=# brand="7">Выдачи</a></li><li><a id2=out2 href=# brand="7" >Расторжения</a></li><li><a id2=out3 href=# brand="7" >Прич.растор.</a></li><li><a id2=out href=# brand="7" >OUT</a></li><li><a id2=zv href=# brand="7" >Звонки</a></li><li><a id2=vz href=# brand="7" >Визиты</a></li><li><a id2=tst href=# brand="7" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm7" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="7"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 3 / Подтвержденные: 3 / Вероятные: 3 / Маловероятные: 22</font></center></div><h5  class="notloaded" id2="brand4" id="4" brandtitle="Лексус - Челябинск" logo="img\logo-Lexus.png"><img width="30px" src="img\logo-Lexus.png" hint="Лексус - Челябинск" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (13)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">1 (2)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">0 (2)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">0 (10)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">0 (25)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (10)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 2 / Подтвержденные: 4 / Вероятные: 20 / Маловероятные: 22" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>22</font> = 2 выд. + 2 подтв. + 16 вер. + 2 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="4"><ul class=tabsmini><li><a id2=dg href=# brand="4" class=current>Договора</a></li><li><a id2=vd href=# brand="4">Выдачи</a></li><li><a id2=out2 href=# brand="4" >Расторжения</a></li><li><a id2=out3 href=# brand="4" >Прич.растор.</a></li><li><a id2=out href=# brand="4" >OUT</a></li><li><a id2=zv href=# brand="4" >Звонки</a></li><li><a id2=vz href=# brand="4" >Визиты</a></li><li><a id2=tst href=# brand="4" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm4" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="4"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 2 / Подтвержденные: 4 / Вероятные: 20 / Маловероятные: 22</font></center></div><h5  class="notloaded" id2="brand5" id="5" brandtitle="Ситроен Центр Челябинск" logo="img\logo-Citroen.png"><img width="30px" src="img\logo-Citroen.png" hint="Ситроен Центр Челябинск" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (21)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">0 (12)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">1 (4)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">0 (15)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">1 (57)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (45)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 12 / Подтвержденные: 30 / Вероятные: 42 / Маловероятные: 51" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>51</font> = 12 выд. + 18 подтв. + 12 вер. + 9 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="5"><ul class=tabsmini><li><a id2=dg href=# brand="5" class=current>Договора</a></li><li><a id2=vd href=# brand="5">Выдачи</a></li><li><a id2=out2 href=# brand="5" >Расторжения</a></li><li><a id2=out3 href=# brand="5" >Прич.растор.</a></li><li><a id2=out href=# brand="5" >OUT</a></li><li><a id2=zv href=# brand="5" >Звонки</a></li><li><a id2=vz href=# brand="5" >Визиты</a></li><li><a id2=tst href=# brand="5" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm5" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="5"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 12 / Подтвержденные: 30 / Вероятные: 42 / Маловероятные: 51</font></center></div><h5  style="opacity:0.75"  class="notloaded" id2="brand%" id="%" brandtitle="" logo="img\"><img width="30px" src="img\logo-seyho.png" hint="" align="left">&nbsp;
+      <img src="img/1dogovor.png" width="15px" align="left" style="padding-left:15px;padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="dg" title="Договора">0 (172)</div>
+      <img src="img/1vidacha.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="vd" title="Выдачи">3 (76)</div>
+
+      <img src="img/OUT.png" width="15px" align="left" style="padding-right:2px;padding-top:1px;opacity:0.7">
+      <div class="roundfooter2" id="out2" title="Расторжения" style="font-size:12px;width:50px;opacity:1">3 (26)</div>
+
+      <img src="img/1zvonok.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="zv" title="Звонки">6 (305)</div>
+      <img src="img/1vizit.png" width="18px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="vz" title="Визиты">4 (589)</div>
+      <img src="img/1test-drive.png" width="15px" align="left" style="padding-right:2px;padding-top:2px;opacity:0.7">
+      <div class="roundfooter2" id="tst" title="Тестдрайвы" style="margin-right:20px">0 (197)</div>
+      <div class="roundfooter2" id="prognoz" title="Выданы = 76 / Подтвержденные: 130 / Вероятные: 181 / Маловероятные: 293" style="float:right;width:320px;font-size:13px;color:lightgray;text-align:center;"><font color=#FFF>293</font> = 76 выд. + 54 подтв. + 51 вер. + 112 малов.</div><img src="img/1vidacha.png" width="15px" title="Планируемые выдачи в этом месяце" align="left" style="float:right;padding-right:2px;padding-top:1px;opacity:0.3"></h5><div class="pane-stat" id="%"><ul class=tabsmini><li><a id2=dg href=# brand="%" class=current>Договора</a></li><li><a id2=vd href=# brand="%">Выдачи</a></li><li><a id2=out2 href=# brand="%" >Расторжения</a></li><li><a id2=out3 href=# brand="%" >Прич.растор.</a></li><li><a id2=out href=# brand="%" >OUT</a></li><li><a id2=zv href=# brand="%" >Звонки</a></li><li><a id2=vz href=# brand="%" >Визиты</a></li><li><a id2=tst href=# brand="%" >Тестдрайвы</a></li><span class="radiobyday"><input type="checkbox" name="group1" id="gr" value="model" checked> модели&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="from"> реклама&nbsp;&nbsp;<input type="checkbox" name="group1" id="gr" value="manager"> менеджеры</span><span class="checkbyday"><input brand="mmm%" class="byday" type="checkbox" checked="checked">помесячно</span><br></ul><div class="pane-stat3" id="%"></div>
+
+	  <center>
+	  <font color=lightgray align=right>Выданы = 76 / Подтвержденные: 130 / Вероятные: 181 / Маловероятные: 293</font></center></div><br>

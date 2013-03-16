@@ -1,0 +1,79 @@
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='./fullcalendar/fullcalendar/fullcalendar.css' />
+<script type='text/javascript' src='./fullcalendar/jquery/jquery-1.5.min.js'></script>
+<script type='text/javascript' src='./fullcalendar/jquery/jquery-ui-1.8.9.custom.min.js'></script>
+<script type='text/javascript' src='./fullcalendar/fullcalendar/fullcalendar.js'></script>
+<script type='text/javascript'>
+
+	$(document).ready(function() {
+	
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay,basicWeek,basicDay'
+			},
+		
+			editable: true,
+			
+			firstDay: 1,
+			height:800,
+			defaultView:'basicWeek',
+			timeFormat: 'H(:mm)',
+			axisFormat:'H(:mm)ч',
+			selectable:true,
+			slotMinutes:15,
+			defaultEventMinutes:30,
+			firstHour:8,
+			minTime:8,
+			maxTime:23,
+			'agendaDay':'H(:mm)',
+			agenda: 'H:mm{ - H:mm}',
+			
+			events: "json-events-do.php",
+			
+			eventDrop: function(event, delta) {
+			  console.log(event.title + ' was moved ' + delta + ' days\n' +
+					'(should probably update your database)');
+			},
+			
+			loading: function(bool) {
+				if (bool) $('#loading').show();
+				else $('#loading').hide();
+			}
+			
+		});
+		
+	});
+
+</script>
+<style type='text/css'>
+
+	body {
+		margin-top: 8px;
+		text-align: center;
+		font-size: 13px;
+		
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		}
+		
+	#loading {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		}
+
+	#calendar {
+		width: 100%;
+		margin: 0 auto;
+		}
+
+</style>
+</head>
+<body>
+<div id='loading' style='display:none'>Загрузка...</div>
+<div id='calendar'></div>
+</body>
+</html>
