@@ -1127,7 +1127,7 @@ function mod_icons($sql3)
    $TXT.='{"name":"Выдача","date":"'.$z5.'", "type":"1vidacha", "opacity":"'.$opacity5.'"},'; 
    $TXT.='{"name":"Подготовка","date":"'.$z5.'", "type":"settings", "opacity":"'.$opacity5.'"},'; 
    $TXT.='{"name":"Договор","date":"'.$z4.'", "type":"1dogovor", "opacity":"'.$opacity4.'"},'; 
-   $TXT.='{"name":"Кредит","date":"'.$z4.'", "type":"1credit", "opacity":"0.1"},'; 
+   $TXT.='{"name":"Счёт","date":"'.$z4.'", "type":"1credit", "opacity":"0.1"},'; 
    $TXT.='{"name":"Ком-предложение","date":"'.$z3.'", "type":"1test-drive", "opacity":"'.$opacity3.'"},'; 
    $TXT.='{"name":"Визит","date":"'.$z2.'", "type":"1vizit", "opacity":"'.$opacity2.'"},'; 
    $TXT.='{"name":"Звонок","date":"'.$z1.'", "type":"1zvonok", "opacity":"'.$opacity1.'"},'; 

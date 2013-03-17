@@ -259,6 +259,7 @@ else
 			<li><a href="#nogo23" id="addclient" id2="2"><img height="13px" style="opacity:0.7" src=".\img\1zvonok.png">&nbsp;&nbsp;&nbsp;Звонок</a></li>
 			<li><a href="#nogo24" id="addclient" id2="3"><img height="13px" style="opacity:0.7" src=".\img\1vizit.png">&nbsp;&nbsp;&nbsp;Визит</a></li>
 			<li><a href="#nogo24" id="addclient" id2="6"><img height="13px" style="opacity:0.7" src=".\img\1test-drive.png">&nbsp;&nbsp;&nbsp;Ком-предложение</a></li>
+			<li><a href="#nogo24" id="addclient" id2="8"><img height="13px" style="opacity:0.7" src=".\img\1credit.png">&nbsp;&nbsp;&nbsp;Счёт</a></li>
 			<li><b>Out</b></li>
 			<li><a href="#nogo26" id="addclient" id2="4"><img height="13px" style="opacity:0.2" src=".\img\1zvonok.png">&nbsp;&nbsp;&nbsp;Звонок Out</a></li>
 			<li><a href="#nogo26" id="addclient" id2="5"><img height="13px" style="opacity:0.2" src=".\img\1vizit.png">&nbsp;&nbsp;&nbsp;Визит Out</a></li>

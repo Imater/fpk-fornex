@@ -1441,7 +1441,7 @@ if ($groupby=='undefined')
 
 
 
-  if ($HTTP_GET_VARS['ShowSQL']==12) $groupby="creditmanager";
+//  if ($HTTP_GET_VARS['ShowSQL']==12) $groupby="creditmanager";
   
   $sqlnews=$sql->selectsql;
   
@@ -2678,6 +2678,8 @@ if($dif_sec>10)
  	  if ($k==$maxcnt) {$brand = '%'; $brand3='ALL';}
  	  else $brand3=$brand;
  	  
+// 	  echo $alldate. " - ".$alldatemonth." - ".cnt2("zv",$alldatemonth,$brand)."<hr>" ;
+ 	  
  	  $dg=cnt2("dg",$alldate,$brand)." (".cnt2("dg",$alldatemonth,$brand).')';
  	  $vd=cnt2("vd",$alldate,$brand)." (".cnt2("vd",$alldatemonth,$brand).')';
  	  $zv=cnt2("zv",$alldate,$brand)." (".cnt2("zv",$alldatemonth,$brand).')';
@@ -3118,12 +3120,27 @@ if (isset($HTTP_GET_VARS['UpdateIcons']))
   while (@$sql = mysql_fetch_object ($result))
 	     {
 		 $t = $sql->type;
+		 
 		 echo '<br>'.$sql->date2.' - '.$sql->type;
+
+	 if ( in_array($t, array("Счёт") ) ) 
+		 	{ 
+		 	echo "<b> <- Счёт превращаем в договор: ".$sql->date2."</b>"; 
+		 	$dg.=$sql->date2.";"; 
+		 	}
+
+
 	if ($sql->checked!="0000-00-00 00:00:00")
 	  {
+		  if ( in_array($t, array("Счёт") ) ) 
+		 	{ 
+		 	echo "<b> <- Счёт превращаем в выдачу: ".$sql->checked."</b>"; 
+		 	$vd.=$sql->checked.";"; 
+		 	}
+
 		 if (($i==0) AND in_array($t, array("Звонок") ) AND (!$zv)) { echo "<b> <- Звонок: ".$sql->date2."</b>"; $zv=$sql->date2; } 
 
-		 if ( in_array($t, array("Визит", "Договор", "Кредит") ) AND (!$vz)) { echo "<b> <- Визит: ".$sql->date2."</b>"; $vz=$sql->date2; }
+		 if ( in_array($t, array("Визит", "Договор", "Счёт") ) AND (!$vz)) { echo "<b> <- Визит: ".$sql->date2."</b>"; $vz=$sql->date2; }
 
 		 if ( in_array($t, array("Договор") ) ) { echo "<b> <- Договор: ".$sql->date2."</b>"; $dg.=$sql->date2.";"; }
 
@@ -3140,7 +3157,7 @@ if (isset($HTTP_GET_VARS['UpdateIcons']))
    if (($sql1->dg == '0000-00-00 00:00:00') AND ($dg!=false)) 
   		{
   		//новый договор
-  		echo "\n\rУРА ДОГОВОР!dg=".$dg."\n\rsql=".$sql1->dg;
+  		echo "\n\r<hr><hr>УРА ДОГОВОР!dg=".$dg."\n\rsql=".$sql1->dg;
   		message_dogovor($sql1);
   		}
 
@@ -3457,14 +3474,22 @@ else $dateto='2200-01-01';
 
 if (!$brand) $brand=$fpk_brand;
 
-	if ($brand=='%') $mybr='';
-	else $mybr="AND cl.brand = '$brand'";
+	if ($brand=='%') $mybr='AND true AND';
+	else $mybr="AND cl.brand = '$brand' AND";
 	
 //    $sqlnews="SELECT count(*) cnt FROM `1_clients` cl WHERE $mybr AND $type LIKE '%$date%' AND $type <= '$dateto' ";
-    $sqlnews="SELECT count(*) cnt FROM `1_do` cl WHERE type = '".$typename[$type]."' $mybr AND date2 LIKE '%$date%' AND date2 <= '$dateto' ";
+	if($type=="zv" || $type=="vz")
+	 	{
+ 	    $sqlnews="SELECT count(*) cnt FROM `1_clients` cl WHERE true $mybr $type LIKE '%$date%' AND $type <= '$dateto' ";
+// 	    echo $sqlnews."<hr>";
+ 	    }
+ 	else
+ 	    {
+ 	    $sqlnews="SELECT count(*) cnt FROM `1_do` cl WHERE type = '".$typename[$type]."' $mybr date2 LIKE '%$date%' AND date2 <= '$dateto' ";
+ 	    }
     
     if ($type=='out2')
-	    $sqlnews="SELECT count(*) cnt FROM `1_clients` cl WHERE (brand!=10 AND brand!=11) $mybr AND cl.out LIKE '$date%' AND cl.dg != '0000-00-00 00:00:00' AND cl.out <= '$dateto'";
+	    $sqlnews="SELECT count(*) cnt FROM `1_clients` cl WHERE (brand!=10 AND brand!=11) $mybr cl.out LIKE '$date%' AND cl.dg != '0000-00-00 00:00:00' AND cl.out <= '$dateto'";
     
     $result = mysql_query_my($sqlnews); @$sql1 = mysql_fetch_object ($result);
 
@@ -3805,6 +3830,7 @@ else
    if ($HTTP_GET_VARS['AddClient']==2) $d=AddDo($sql->maxid,'Звонок',$did,$fpk_user,$Manager);
    if ($HTTP_GET_VARS['AddClient']==3) $d=AddDo($sql->maxid,'Визит',$did,$fpk_user,$Manager);
    if ($HTTP_GET_VARS['AddClient']==6) { $d=AddDo($sql->maxid,'Ком-предложение',$did,$fpk_user,$Manager); $d=AddDo($sql->maxid,'Визит',1,$fpk_user,$Manager); }
+   if ($HTTP_GET_VARS['AddClient']==8) { $d=AddDo($sql->maxid,'Счёт',0,$fpk_user,$Manager); $d=AddDo($sql->maxid,'Звонок',1,$fpk_user,$Manager); }
 
    if ($HTTP_GET_VARS['AddClient']==4) { $d=AddDo($sql->maxid,'Звонок',1); $d=AddDo($sql->maxid,'OUT',1); }
    if ($HTTP_GET_VARS['AddClient']==5) { $d=AddDo($sql->maxid,'Визит',1); $d=AddDo($sql->maxid,'OUT',1); }
